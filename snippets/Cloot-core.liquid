@@ -148,6 +148,49 @@ body.tlm-lock {
   transform: translate3d(-100%,0,0);
 }
 
+/* Hero typography and split-word styles */
+.cine-hero__title {
+  font-family: var(--tlm-font-display);
+  font-size: clamp(3rem, 10vw, 9.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  margin: 0;
+}
+
+.cine-hero__word {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform, opacity, filter;
+  margin-right: 0.45rem;
+}
+
+/* Horizontal story layout */
+.cine-horizontal__viewport { overflow: hidden; }
+.cine-horizontal__track { display: flex; gap: 48px; align-items: stretch; }
+.cine-horizontal__panel { min-width: 100vw; display: grid; align-items: center; }
+.cine-horizontal__image img { width: 100%; height: 60vh; object-fit: cover; border-radius: 10px; transform-origin: center; }
+
+/* Collection card */
+.cine-collection-card { display: block; position: relative; overflow: hidden; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); background: rgba(255,255,255,0.01); transition: transform 320ms var(--tlm-ease), box-shadow 320ms var(--tlm-ease); }
+.cine-collection-card img { display: block; width: 100%; height: 420px; object-fit: cover; transform-origin: center; transition: transform 520ms var(--tlm-ease); }
+.cine-collection-card__content { position: absolute; bottom: 22px; left: 22px; color: var(--tlm-fg); backdrop-filter: blur(6px); padding: 18px 22px; border-radius: 8px; background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.38)); }
+
+/* Testimonials */
+.cine-testimonial { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 28px; border-radius: 14px; backdrop-filter: blur(12px); box-shadow: var(--tlm-shadow-soft); }
+
+/* Newsletter */
+.cine-newsletter__form { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 18px; align-items: center; }
+.cine-newsletter__form input[type="email"] { padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: var(--tlm-fg); }
+
+/* Footer reveal (subtle) */
+.tlm-footer { opacity: 0; transform: translateY(24px); transition: opacity 900ms var(--tlm-ease), transform 900ms var(--tlm-ease); }
+
+@media (max-width: 749px) {
+  .cine-hero__title { font-size: clamp(2.2rem, 12vw, 4.8rem); }
+  .cine-collection-card img { height: 260px; }
+}
+
 body:not(.tlm-is-loading) .tlm-loader {
   opacity: 0;
   visibility: hidden;

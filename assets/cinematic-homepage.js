@@ -111,38 +111,58 @@
       return;
     }
 
+    // Helper: split each hero line into word spans for per-word motion
+    const splitWords = (el) => {
+      if (!el) return;
+      const text = el.textContent.trim();
+      const words = text.split(/\s+/).filter(Boolean);
+      el.innerHTML = words.map((w) => `<span class="cine-hero__word">${w}</span>`).join(' ');
+      return el.querySelectorAll('.cine-hero__word');
+    };
+
     if (!reduceMotion) {
-      const intro = window.gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.2 } });
+      // prepare words
+      hero.querySelectorAll('[data-hero-word]').forEach((line) => splitWords(line));
+
+      const intro = window.gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.1 } });
+
+      // staged intro: brand float, title words, supporting fades
       intro
         .from(hero.querySelector('[data-hero-brand]'), {
           opacity: 0,
-          scale: 0.8,
-          duration: 2,
+          scale: 0.92,
+          y: 18,
+          duration: 1.6,
           ease: 'power2.out'
         })
-        .from(hero.querySelectorAll('[data-hero-word]'), {
-          y: 100,
-          opacity: 0,
-          rotateX: -45,
-          filter: 'blur(10px)',
-          stagger: 0.15
-        }, '-=1.4')
+        .from(
+          hero.querySelectorAll('.cine-hero__word'),
+          {
+            y: 84,
+            opacity: 0,
+            rotateX: -28,
+            filter: 'blur(8px)',
+            stagger: { each: 0.06, from: 'start' }
+          },
+          '-=1.0'
+        )
         .from(
           hero.querySelectorAll('[data-hero-fade]'),
           {
-            y: 30,
+            y: 28,
             opacity: 0,
-            filter: 'blur(5px)',
-            stagger: 0.1
+            filter: 'blur(4px)',
+            stagger: 0.08
           },
-          '-=0.8'
+          '-=0.7'
         );
 
       const media = hero.querySelector('[data-hero-media]');
       if (media) {
         window.gsap.to(media, {
-          scale: 1.2,
-          yPercent: 10,
+          scale: 1.22,
+          yPercent: 8,
+          ease: 'none',
           scrollTrigger: {
             trigger: hero,
             start: 'top top',
@@ -155,9 +175,10 @@
       const brand = hero.querySelector('[data-hero-brand]');
       if (brand) {
         window.gsap.to(brand, {
-          yPercent: -30,
-          scale: 1.1,
-          opacity: 0.1,
+          yPercent: -28,
+          scale: 1.06,
+          opacity: 0.12,
+          ease: 'none',
           scrollTrigger: {
             trigger: hero,
             start: 'top top',
@@ -168,6 +189,28 @@
       }
     }
 
+
+  const setupProductHover = (root, reduceMotion) => {
+    if (reduceMotion) return;
+    root.querySelectorAll('.cine-collection-card').forEach((card) => {
+      const img = card.querySelector('img');
+      const content = card.querySelector('.cine-collection-card__content');
+      if (!img) return;
+      card.style.willChange = 'transform';
+
+      card.addEventListener('pointerenter', () => {
+        window.gsap.to(img, { scale: 1.08, duration: 0.7, ease: 'power3.out' });
+        window.gsap.to(card, { y: -6, boxShadow: '0 28px 70px rgba(0,0,0,0.5)', duration: 0.6, ease: 'power2.out' });
+        if (content) window.gsap.to(content, { y: -6, duration: 0.6, ease: 'power2.out' });
+      });
+
+      card.addEventListener('pointerleave', () => {
+        window.gsap.to(img, { scale: 1, duration: 0.6, ease: 'power3.out' });
+        window.gsap.to(card, { y: 0, boxShadow: 'none', duration: 0.6, ease: 'power2.out' });
+        if (content) window.gsap.to(content, { y: 0, duration: 0.6, ease: 'power2.out' });
+      });
+    });
+  };
     const glow = hero.querySelector('[data-hero-glow]');
     if (glow && !reduceMotion) {
       hero.addEventListener('pointermove', (event) => {
