@@ -74,21 +74,32 @@
 
       // Main loader has finished, now animate section loader
       const tl = window.gsap.timeline();
+      const graphic = loader.querySelector('.cine-loader__graphic');
+      const line = loader.querySelector('.cine-loader__line span');
+
+      // Intro: subtle vignette fade and animated progress line
       tl.fromTo(
-        loader.querySelector('.cine-loader__brand'),
-        { y: 28, opacity: 0, filter: 'blur(12px)' },
-        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.85, ease: 'power3.out' }
-      ).to(loader, {
-        opacity: 0,
-        duration: 0.55,
-        delay: 0.35,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          loader.classList.add('is-hidden');
-          // Ensure pointer events are properly restored
-          document.body.style.pointerEvents = '';
-        }
-      });
+        graphic,
+        { opacity: 0, scale: 0.98, filter: 'blur(6px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out' }
+      )
+        .fromTo(
+          line,
+          { xPercent: -100 },
+          { xPercent: 0, duration: 0.95, ease: 'power2.out' },
+          '-=0.3'
+        )
+        .to(graphic, {
+          opacity: 0,
+          duration: 0.6,
+          delay: 0.22,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            loader.classList.add('is-hidden');
+            // Ensure pointer events are properly restored
+            document.body.style.pointerEvents = '';
+          }
+        });
     };
 
     waitForMainLoader();

@@ -455,8 +455,12 @@
 {% endstylesheet %}
 
 <section class="cine-landing" data-cinematic-homepage>
-  <div class="cine-loader" data-cine-loader>
-    <div class="cine-loader__brand">{{ section.settings.brand_mark }}</div>
+  <div class="cine-loader" data-cine-loader aria-hidden="true">
+    <div class="cine-loader__graphic" aria-hidden="true">
+      <!-- Cinematic animated graphic: subtle radial vignette + animated line -->
+      <div class="cine-loader__vignette" aria-hidden="true"></div>
+      <div class="cine-loader__line" aria-hidden="true"><span></span></div>
+    </div>
   </div>
 
   <div class="cine-hero" data-cine-hero>

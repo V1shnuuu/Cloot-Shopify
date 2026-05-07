@@ -97,6 +97,57 @@ body.tlm-lock {
   animation: tlm-loader-line 980ms var(--tlm-ease-cinematic) infinite;
 }
 
+/* Cinematic section loader (used by landing cinematic section) */
+.cine-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: grid;
+  place-content: center;
+  background: radial-gradient(circle at 50% 30%, rgba(214, 201, 170, 0.06), transparent 36%), rgba(5,5,5,0.88);
+  transition: opacity 520ms var(--tlm-ease-cinematic), visibility 520ms var(--tlm-ease-cinematic);
+  pointer-events: auto;
+}
+
+.cine-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cine-loader__graphic {
+  width: min(640px, 84vw);
+  max-width: 860px;
+  display: grid;
+  gap: 18px;
+  place-items: center;
+}
+
+.cine-loader__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, rgba(214,201,170,0.12), transparent 30%);
+  filter: blur(24px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.cine-loader__line {
+  width: min(420px, 78vw);
+  height: 2px;
+  overflow: hidden;
+  background: rgba(242,241,237,0.06);
+  border-radius: 2px;
+}
+
+.cine-loader__line span {
+  display: block;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(214,201,170,0.85), transparent);
+  transform: translate3d(-100%,0,0);
+}
+
 body:not(.tlm-is-loading) .tlm-loader {
   opacity: 0;
   visibility: hidden;
