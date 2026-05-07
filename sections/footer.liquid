@@ -1,0 +1,225 @@
+{% stylesheet %}
+  .tlm-footer {
+    position: relative;
+    padding: 90px 0 60px;
+    border-top: 1px solid rgba(242, 241, 237, 0.1);
+    overflow: hidden;
+  }
+
+  .tlm-footer::before {
+    content: "Cloot";
+    position: absolute;
+    left: 50%;
+    bottom: -0.22em;
+    transform: translateX(-50%);
+    font-family: var(--tlm-font-display);
+    font-size: clamp(5rem, 18vw, 18rem);
+    letter-spacing: 0.08em;
+    color: rgba(242, 241, 237, 0.035);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .tlm-footer__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  .tlm-footer__brand {
+    display: grid;
+    gap: 16px;
+  }
+
+  .tlm-footer__logo {
+    font-family: var(--tlm-font-display);
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .tlm-footer__text {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+
+  .tlm-footer__links ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .tlm-footer__links a {
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-footer__newsletter {
+    display: grid;
+    gap: 16px;
+  }
+
+  .tlm-footer__newsletter form {
+    display: grid;
+    gap: 12px;
+  }
+
+  .tlm-footer__newsletter input {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+  }
+
+  .tlm-footer__bottom {
+    position: relative;
+    z-index: 1;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--tlm-muted);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .tlm-footer__payments {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 989px) {
+    .tlm-footer__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tlm-footer__bottom {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+{% endstylesheet %}
+
+<footer class="tlm-footer">
+  <div class="tlm-footer__grid tlm-container">
+    <div class="tlm-footer__brand" data-reveal>
+      <div class="tlm-footer__logo">{{ section.settings.brand_text }}</div>
+      <p class="tlm-footer__text">{{ section.settings.brand_statement }}</p>
+      {% if section.settings.social_menu != blank %}
+        <div class="tlm-footer__links">
+          <ul>
+            {% for link in section.settings.social_menu.links %}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="tlm-footer__links" data-reveal>
+      {% if section.settings.menu != blank %}
+        <ul>
+          {% for link in section.settings.menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if section.settings.secondary_menu != blank %}
+        <ul>
+          {% for link in section.settings.secondary_menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="tlm-footer__newsletter" data-reveal>
+      <p class="tlm-eyebrow">{{ section.settings.newsletter_label }}</p>
+      <p class="tlm-footer__text">{{ section.settings.newsletter_text }}</p>
+      {% form 'customer' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" name="contact[email]" placeholder="Email address" required>
+        <button class="tlm-btn" type="submit" data-magnetic>Join the list</button>
+      {% endform %}
+    </div>
+  </div>
+
+  <div class="tlm-footer__bottom tlm-container">
+    <div>
+      &copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_text }}
+    </div>
+    {% if section.settings.show_payment_icons %}
+      <div class="tlm-footer__payments">
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Cloot Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Brand text",
+      "default": "Cloot"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_statement",
+      "label": "Brand statement",
+      "default": "Luxury streetwear informed by editorial silhouettes and cinematic motion."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Primary menu"
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "Secondary menu"
+    },
+    {
+      "type": "link_list",
+      "id": "social_menu",
+      "label": "Social menu"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_label",
+      "label": "Newsletter label",
+      "default": "Stay close"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "Join for early access, drop alerts, and editorial stories."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cloot Footer"
+    }
+  ]
+}
+{% endschema %}

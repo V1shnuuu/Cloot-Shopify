@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "customer-dashboard",
+      "settings": {}
+    },
+    "tracking": {
+      "type": "order-tracking",
+      "settings": {
+        "heading": "Track an order from your account"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tracking"
+  ]
+}

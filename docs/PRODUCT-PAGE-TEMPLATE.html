@@ -1,0 +1,506 @@
+<!-- 
+  PREMIUM PRODUCT PAGE TEMPLATE
+  Full-featured product detail page with gallery, pricing, reviews, recommendations
+  Composed from reusable components and sections
+-->
+
+<style>
+  .product-page {
+    background: var(--color-white);
+    min-height: 100vh;
+  }
+
+  .product-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    padding: var(--space-16) var(--space-8);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .product-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .gallery-main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background: var(--color-gray-100);
+  }
+
+  .gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: zoom-in;
+    transition: transform var(--transition-normal) ease-out;
+  }
+
+  .gallery-main:hover img {
+    transform: scale(1.1);
+  }
+
+  .gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+
+  .thumbnail {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumbnail:hover,
+  .thumbnail.active {
+    border-color: var(--color-primary-500);
+  }
+
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .product-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+  }
+
+  .breadcrumb a {
+    color: var(--color-primary-600);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .product-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .stars {
+    color: var(--color-warning);
+    font-size: var(--font-size-lg);
+  }
+
+  .rating-count {
+    color: var(--color-gray-600);
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-gray-200);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .price-current {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .price-original {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-400);
+    text-decoration: line-through;
+  }
+
+  .price-discount {
+    background: var(--gradient-warm);
+    color: var(--color-white);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .product-description {
+    color: var(--color-gray-700);
+    line-height: var(--line-height-relaxed);
+  }
+
+  .variants-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-xl);
+  }
+
+  .variant-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .variant-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+  }
+
+  .variant-options {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .variant-option {
+    padding: var(--space-2) var(--space-4);
+    border: 2px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease-out;
+    font-size: var(--font-size-sm);
+  }
+
+  .variant-option:hover {
+    border-color: var(--color-primary-500);
+  }
+
+  .variant-option.active {
+    background: var(--color-primary-600);
+    color: var(--color-white);
+    border-color: var(--color-primary-600);
+  }
+
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .qty-label {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .qty-input-group {
+    display: flex;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .qty-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--color-gray-100);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .qty-btn:hover {
+    background: var(--color-gray-200);
+  }
+
+  .qty-input {
+    width: 60px;
+    border: none;
+    text-align: center;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-white);
+  }
+
+  .product-actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-4);
+  }
+
+  .product-actions .btn {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-base);
+  }
+
+  .wishlist-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-gray-300);
+    background: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-2xl);
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .wishlist-btn:hover {
+    border-color: var(--color-error);
+    background: var(--color-error);
+    color: var(--color-white);
+  }
+
+  .product-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--color-primary-50);
+    border-radius: var(--radius-xl);
+    border-left: 4px solid var(--color-primary-600);
+  }
+
+  .benefit {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .benefit-icon {
+    font-size: var(--font-size-xl);
+    flex-shrink: 0;
+  }
+
+  .benefit-text {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+  }
+
+  @media (max-width: 1024px) {
+    .product-container {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-thumbnails {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .product-container {
+      padding: var(--space-8) var(--space-4);
+      gap: var(--space-8);
+    }
+
+    .product-title {
+      font-size: var(--font-size-2xl);
+    }
+
+    .price-current {
+      font-size: var(--font-size-3xl);
+    }
+
+    .product-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-thumbnails {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<div class="product-page">
+  <div class="product-container">
+    <!-- Product Gallery -->
+    <div class="product-gallery">
+      <div class="gallery-main">
+        <img id="main-image" src="https://via.placeholder.com/600" alt="Product Image">
+      </div>
+      <div class="gallery-thumbnails">
+        <div class="thumbnail active" onclick="changeImage(this)">
+          <img src="https://via.placeholder.com/150" alt="Product Angle 1">
+        </div>
+        <div class="thumbnail" onclick="changeImage(this)">
+          <img src="https://via.placeholder.com/150" alt="Product Angle 2">
+        </div>
+        <div class="thumbnail" onclick="changeImage(this)">
+          <img src="https://via.placeholder.com/150" alt="Product Angle 3">
+        </div>
+        <div class="thumbnail" onclick="changeImage(this)">
+          <img src="https://via.placeholder.com/150" alt="Product Angle 4">
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="product-details">
+      <div class="product-header">
+        <div class="breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          <a href="/collections/all">Products</a>
+          <span>/</span>
+          <span>Premium T-Shirt</span>
+        </div>
+
+        <h1 class="product-title">Premium Cotton T-Shirt</h1>
+
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-count">(128 reviews)</span>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="product-price">
+        <span class="price-current">$49.99</span>
+        <span class="price-original">$99.99</span>
+        <span class="price-discount">50% OFF</span>
+      </div>
+
+      <!-- Description -->
+      <p class="product-description">
+        Experience luxury comfort with our premium cotton t-shirt. Made from 100% organic cotton, this versatile piece features a classic design that works perfectly for any occasion. Superior craftsmanship and attention to detail ensure lasting quality.
+      </p>
+
+      <!-- Variants -->
+      <div class="variants-section">
+        <div class="variant-group">
+          <label class="variant-label">Size</label>
+          <div class="variant-options">
+            <div class="variant-option active">XS</div>
+            <div class="variant-option">S</div>
+            <div class="variant-option">M</div>
+            <div class="variant-option">L</div>
+            <div class="variant-option">XL</div>
+            <div class="variant-option">XXL</div>
+          </div>
+        </div>
+
+        <div class="variant-group">
+          <label class="variant-label">Color</label>
+          <div class="variant-options">
+            <div class="variant-option active">Navy</div>
+            <div class="variant-option">White</div>
+            <div class="variant-option">Black</div>
+            <div class="variant-option">Gray</div>
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="variant-group">
+          <label class="variant-label">Quantity</label>
+          <div class="quantity-selector">
+            <div class="qty-input-group">
+              <button class="qty-btn">−</button>
+              <input type="number" class="qty-input" value="1" min="1" max="999">
+              <button class="qty-btn">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Benefits -->
+      <div class="product-benefits">
+        <div class="benefit">
+          <span class="benefit-icon">✓</span>
+          <span class="benefit-text"><strong>100% Organic Cotton</strong> - Premium quality, eco-friendly material</span>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">✓</span>
+          <span class="benefit-text"><strong>Free Shipping</strong> - On all orders over $50</span>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">✓</span>
+          <span class="benefit-text"><strong>30-Day Returns</strong> - Risk-free purchase guarantee</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="product-actions">
+        <button class="btn btn-lg btn-primary" onclick="addToCart()">Add to Cart</button>
+        <button class="wishlist-btn" onclick="toggleWishlist(this)">❤️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Section -->
+  <div style="
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--space-8) var(--space-16);
+  ">
+    <!-- Reviews Section -->
+    <div style="margin-top: var(--space-16);">
+      <h2 style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); margin-bottom: var(--space-8);">
+        Customer Reviews
+      </h2>
+      <div style="display: grid; gap: var(--space-6);">
+        <div style="
+          padding: var(--space-6);
+          border: 1px solid var(--color-gray-200);
+          border-radius: var(--radius-lg);
+        ">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-3);">
+            <strong>Sarah Johnson</strong>
+            <span style="color: var(--color-warning);">★★★★★</span>
+          </div>
+          <p style="color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Absolutely love this shirt! The quality is amazing and it's so comfortable. Perfect for everyday wear and looks great after multiple washes. Highly recommend!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations Section -->
+  {% section 'recommendations-carousel' %}
+</div>
+
+<script>
+  function changeImage(thumbnail) {
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    thumbnail.classList.add('active');
+    document.getElementById('main-image').src = thumbnail.querySelector('img').src;
+  }
+
+  function addToCart() {
+    alert('Added to cart! (Integration with Shopify Cart API)');
+    openCart();
+  }
+
+  function toggleWishlist(btn) {
+    btn.classList.toggle('active');
+    alert('Added to wishlist!');
+  }
+</script>

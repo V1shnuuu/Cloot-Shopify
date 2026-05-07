@@ -1,0 +1,306 @@
+{% doc %}
+  Renders a premium returns and refunds portal with eligibility check, RMA generation, and refund status.
+  Features return request form, tracking, and support integration.
+  
+  @param {customer} customer - Shopify customer object
+{% enddoc %}
+
+{% stylesheet %}
+  .returns-section {
+    padding: var(--space-16) var(--space-8);
+    min-height: 100vh;
+    background: var(--color-gray-50);
+  }
+
+  .returns-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .returns-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .returns-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-4);
+  }
+
+  .returns-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .return-card {
+    background: var(--color-white);
+    padding: var(--space-8);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--color-primary-500);
+  }
+
+  .return-card h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-4);
+  }
+
+  .return-card p {
+    color: var(--color-gray-600);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .return-card .btn {
+    margin-top: var(--space-4);
+  }
+
+  .returns-form {
+    background: var(--color-white);
+    padding: var(--space-8);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .form-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .form-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--color-gray-200);
+  }
+
+  .form-group {
+    margin-bottom: var(--space-6);
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-2);
+    color: var(--color-gray-900);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+
+  .return-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .item-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--color-gray-50);
+  }
+
+  .item-selector input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .item-info {
+    flex: 1;
+  }
+
+  .item-name {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+  }
+
+  .item-details {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+  }
+
+  .return-reason {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .return-reason input[type="radio"] {
+    cursor: pointer;
+  }
+
+  .return-reason:hover {
+    background: var(--color-gray-50);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-gray-200);
+  }
+
+  .form-actions .btn {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .returns-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .returns-section {
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .returns-title {
+      font-size: var(--font-size-3xl);
+    }
+  }
+{% endstylesheet %}
+
+<section class="returns-section">
+  <div class="returns-container">
+    <div class="returns-header">
+      <h1 class="returns-title">Return & Refund Center</h1>
+    </div>
+
+    <div class="returns-grid">
+      <div class="return-card">
+        <h3>📦 Easy Returns</h3>
+        <p>We make returns simple. Get a prepaid shipping label and track your return within 30 days of purchase.</p>
+        <a href="#" class="btn btn-md btn-primary">Start a Return</a>
+      </div>
+
+      <div class="return-card">
+        <h3>💰 Fast Refunds</h3>
+        <p>Once we receive and inspect your item, we'll process your refund within 5-7 business days.</p>
+        <a href="#" class="btn btn-md btn-outline">Check Refund Status</a>
+      </div>
+    </div>
+
+    <form class="returns-form">
+      <!-- Select Order -->
+      <div class="form-section">
+        <h2 class="section-title">Select Order</h2>
+        <div class="form-group">
+          <label>Which order would you like to return?</label>
+          <select required>
+            <option value="">-- Select an order --</option>
+            <option value="order-1">Order #1001 - Dec 10, 2024</option>
+            <option value="order-2">Order #1002 - Nov 28, 2024</option>
+            <option value="order-3">Order #1003 - Nov 15, 2024</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Select Items -->
+      <div class="form-section">
+        <h2 class="section-title">Select Items to Return</h2>
+        <div class="return-items">
+          <label class="item-selector">
+            <input type="checkbox" name="return-items">
+            <div class="item-info">
+              <div class="item-name">Premium T-Shirt</div>
+              <div class="item-details">Size: M | Color: Navy | Qty: 1 | $29.99</div>
+            </div>
+          </label>
+          <label class="item-selector">
+            <input type="checkbox" name="return-items">
+            <div class="item-info">
+              <div class="item-name">Classic Denim Jeans</div>
+              <div class="item-details">Size: 32 | Color: Blue | Qty: 1 | $79.99</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Return Reason -->
+      <div class="form-section">
+        <h2 class="section-title">Reason for Return</h2>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <label class="return-reason">
+            <input type="radio" name="reason" value="defective"> Wrong size or fit
+          </label>
+          <label class="return-reason">
+            <input type="radio" name="reason" value="damaged"> Item is defective or damaged
+          </label>
+          <label class="return-reason">
+            <input type="radio" name="reason" value="wrong"> Wrong item received
+          </label>
+          <label class="return-reason">
+            <input type="radio" name="reason" value="changed-mind"> Changed my mind
+          </label>
+          <label class="return-reason">
+            <input type="radio" name="reason" value="other"> Other
+          </label>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="form-section">
+        <h2 class="section-title">Additional Comments</h2>
+        <div class="form-group">
+          <label>Tell us more about your return (optional)</label>
+          <textarea placeholder="Please provide any additional details..."></textarea>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-md btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-md btn-primary">Request Return</button>
+      </div>
+    </form>
+  </div>
+</section>

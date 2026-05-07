@@ -1,0 +1,122 @@
+{% stylesheet %}
+  .tlm-return {
+    padding: 90px 0;
+  }
+
+  .tlm-return__grid {
+    display: grid;
+    grid-template-columns: 0.75fr 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+
+  .tlm-return__panel {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-return__form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .tlm-return__form label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-return__form input,
+  .tlm-return__form select,
+  .tlm-return__form textarea {
+    width: 100%;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+    padding: 12px;
+  }
+
+  .tlm-return__policy {
+    display: grid;
+    gap: 12px;
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-return__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-return">
+  <div class="tlm-container tlm-return__grid">
+    <div class="tlm-return__panel tlm-return__policy" data-reveal>
+      <p class="tlm-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1 class="tlm-title">{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.policy_text }}</p>
+      {% render 'commerce-status-timeline', current_step: 'order' %}
+    </div>
+
+    <form class="tlm-return__panel tlm-return__form" data-return-request-form>
+      <div>
+        <label for="return-order-{{ section.id }}">Order number</label>
+        <input id="return-order-{{ section.id }}" name="order_name" type="text" placeholder="#1001" required>
+      </div>
+      <div>
+        <label for="return-email-{{ section.id }}">Email</label>
+        <input id="return-email-{{ section.id }}" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div>
+        <label for="return-reason-{{ section.id }}">Reason</label>
+        <select id="return-reason-{{ section.id }}" name="reason" required>
+          <option value="size_fit">Size or fit</option>
+          <option value="changed_mind">Changed mind</option>
+          <option value="damaged">Damaged item</option>
+          <option value="wrong_item">Wrong item</option>
+        </select>
+      </div>
+      <div>
+        <label for="return-notes-{{ section.id }}">Notes</label>
+        <textarea id="return-notes-{{ section.id }}" name="notes" rows="5"></textarea>
+      </div>
+      <button class="tlm-btn" type="submit">Request return</button>
+      <p class="tlm-workflow-status" data-workflow-status aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Return request",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Returns and refunds"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Start a return"
+    },
+    {
+      "type": "textarea",
+      "id": "policy_text",
+      "label": "Policy text",
+      "default": "Return requests are checked against policy, routed to support when review is needed, and connected to refund and inventory workflows."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Return request"
+    }
+  ]
+}
+{% endschema %}

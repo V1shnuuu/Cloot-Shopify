@@ -1,0 +1,53 @@
+flowchart LR
+  theme[Shopify Theme]
+  liquid[Liquid Rendering Context]
+  ajax[Ajax Cart API]
+  predictive[Predictive Search API]
+  storefront[Storefront API]
+  checkout[Shopify Checkout]
+  admin[Shopify Admin]
+  themeEditor[Theme Editor]
+  apps[Shopify Apps]
+  appProxy[App Proxy]
+  webhooks[Webhooks]
+  adminApi[Admin API]
+  products[Product Service]
+  collections[Collection Service]
+  cart[Cart Service]
+  customers[Customer Accounts]
+  orders[Order Service]
+  content[Content and Metafields Service]
+  analytics[Analytics and Customer Events]
+
+  theme --> liquid
+  liquid --> products
+  liquid --> collections
+  liquid --> content
+  theme --> ajax
+  ajax --> cart
+  cart --> checkout
+  checkout --> orders
+  checkout --> analytics
+  theme --> predictive
+  predictive --> products
+  predictive --> collections
+  theme --> storefront
+  storefront --> products
+  storefront --> collections
+  storefront --> content
+  theme --> customers
+  customers --> cart
+  admin --> themeEditor
+  themeEditor --> theme
+  admin --> apps
+  apps --> adminApi
+  adminApi --> products
+  adminApi --> collections
+  adminApi --> content
+  adminApi --> orders
+  apps --> appProxy
+  appProxy --> theme
+  orders --> webhooks
+  products --> webhooks
+  customers --> webhooks
+  webhooks --> apps

@@ -1,0 +1,77 @@
+flowchart TB
+  Customer["Customer"]
+  CDN["CDN and Cache Layer"]
+  Storefront["Shopify Liquid Storefront"]
+  Collections["Collections"]
+  ProductPages["Product Pages"]
+  Wishlist["Wishlist"]
+  Cart["Cart System"]
+  Discounts["Discount Engine"]
+  Checkout["Checkout Flow"]
+  Shipping["Shipping Selection"]
+  Payment["Payment Gateway"]
+  Fraud["Fraud Detection"]
+  Orders["Order Creation"]
+  Inventory["Inventory Reservation"]
+  Warehouse["Warehouse Processing"]
+  Tracking["Shipping and Tracking"]
+  Delivery["Delivery Flow"]
+  Reviews["Reviews and Moderation"]
+  Returns["Returns and Refunds"]
+  Support["Customer Support"]
+  Admin["Admin Dashboard"]
+  Analytics["Analytics Engine"]
+  Recommendations["Recommendation Engine"]
+  Pricing["Dynamic Pricing"]
+  Notifications["Notification System"]
+  Auth["Authentication Service"]
+  Events["Event Queue or Message Broker"]
+  Database[("Shopify Data Store")]
+  Apps["Third Party App Integrations"]
+
+  Customer --> CDN
+  CDN --> Storefront
+  Storefront --> Collections
+  Storefront --> ProductPages
+  Storefront --> Wishlist
+  Storefront --> Cart
+  Storefront --> Auth
+  Collections --> ProductPages
+  ProductPages --> Cart
+  ProductPages --> Wishlist
+  ProductPages --> Reviews
+  Cart --> Discounts
+  Discounts --> Checkout
+  Checkout --> Shipping
+  Checkout --> Payment
+  Payment --> Fraud
+  Fraud --> Orders
+  Orders --> Inventory
+  Inventory --> Warehouse
+  Warehouse --> Tracking
+  Tracking --> Delivery
+  Delivery --> Returns
+  Returns --> Payment
+  Returns --> Support
+  Reviews --> Support
+  Admin --> Reviews
+  Admin --> Support
+  Admin --> Analytics
+  Admin --> Apps
+  Orders --> Events
+  Inventory --> Events
+  Delivery --> Events
+  Returns --> Events
+  Events --> Notifications
+  Events --> Analytics
+  Analytics --> Recommendations
+  Analytics --> Pricing
+  Recommendations --> Storefront
+  Pricing --> ProductPages
+  Notifications --> Customer
+  Storefront --> Database
+  Auth --> Database
+  Orders --> Database
+  Inventory --> Database
+  Reviews --> Database
+  Apps --> Database

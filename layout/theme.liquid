@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% # Inlined CSS Variables %}
+    {% render 'css-variables' %}
+    {% render 'Cloot-fonts' %}
+    {% render 'Cloot-core' %}
+
+    {% comment %}
+      Font preloading:
+      1. Preconnect to font CDN for faster connection
+      2. Preload only the critical font variant (base weight)
+      3. Additional variants load on-demand via @font-face
+    {% endcomment %}
+    {% unless settings.type_primary_font.system? %}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
+      {% comment %} Preload the base font variant for initial page render {% endcomment %}
+      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endunless %}
+
+    {% # Load and preload the critical CSS %}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+
+    {% # Load design system with global tokens %}
+    {{ 'design-system.css' | asset_url | stylesheet_tag }}
+
+    {% # Social, title, etc. %}
+    {% render 'meta-tags' %}
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="tlm tlm-is-loading">
+    <div class="tlm-loader" data-tlm-loader aria-hidden="true">
+      <div class="tlm-loader__mark">Cloot</div>
+      <div class="tlm-loader__line"><span></span></div>
+    </div>
+    <div class="tlm-page-transition" data-page-transition aria-hidden="true"></div>
+    <div class="tlm-ambient tlm-ambient--one" aria-hidden="true"></div>
+    <div class="tlm-ambient tlm-ambient--two" aria-hidden="true"></div>
+    {% render 'Cloot-cursor' %}
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="tlm-page" data-page-shell role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% comment %} Premium UI System Components {% endcomment %}
+    {% render 'cart-drawer', cart: cart %}
+    {% render 'drawer', id: 'mobile-menu' %}
+
+    {% sections 'footer-group' %}
+    <div class="tlm-quick-view" data-quick-view aria-hidden="true">
+      <button class="tlm-quick-view__backdrop" type="button" data-quick-view-close aria-label="Close quick view"></button>
+      <aside class="tlm-quick-view__panel tlm-glass">
+        <button class="tlm-icon-btn tlm-quick-view__close" type="button" data-quick-view-close aria-label="Close quick view">
+          {% render 'icon-close' %}
+        </button>
+        <div class="tlm-quick-view__media">
+          <img src="" alt="" width="720" height="960" loading="lazy" data-quick-view-image>
+        </div>
+        <div class="tlm-quick-view__content">
+          <p class="tlm-eyebrow">Quick view</p>
+          <h2 class="tlm-quick-view__title" data-quick-view-title></h2>
+          <p class="tlm-quick-view__price" data-quick-view-price></p>
+          <a class="tlm-btn" href="#" data-quick-view-link data-magnetic>View product</a>
+        </div>
+      </aside>
+    </div>
+    <div class="tlm-lightbox" data-lightbox aria-hidden="true">
+      <button class="tlm-lightbox__backdrop" type="button" data-lightbox-close aria-label="Close image zoom"></button>
+      <button class="tlm-icon-btn tlm-lightbox__close" type="button" data-lightbox-close aria-label="Close image zoom">
+        {% render 'icon-close' %}
+      </button>
+      <img src="" alt="" width="1200" height="1400" data-lightbox-image>
+    </div>
+    {% render 'Cloot-motion' %}
+    <script src="{{ 'commerce-orchestrator.js' | asset_url }}" defer></script>
+  </body>
+</html>

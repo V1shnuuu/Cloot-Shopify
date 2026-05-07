@@ -1,0 +1,196 @@
+{% stylesheet %}
+  .recommendations-carousel-premium {
+    padding: clamp(56px, 8vw, 108px) 0;
+  }
+
+  .recommendations-carousel-premium__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .recommendations-carousel-premium__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2rem, 4.4vw, 3.8rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .recommendations-carousel-premium__nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .recommendations-carousel-premium__btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid rgba(242, 241, 237, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--tlm-fg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 220ms var(--tlm-ease), border-color 220ms var(--tlm-ease);
+  }
+
+  .recommendations-carousel-premium__btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(214, 201, 170, 0.56);
+  }
+
+  .recommendations-carousel-premium__btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+  }
+
+  .recommendations-carousel-premium__viewport {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .recommendations-carousel-premium__viewport::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .recommendations-carousel-premium__viewport::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+  }
+
+  .recommendations-carousel-premium__viewport::-webkit-scrollbar-thumb {
+    background: rgba(242, 241, 237, 0.32);
+    border-radius: 999px;
+  }
+
+  .recommendations-carousel-premium__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(230px, 1fr);
+    gap: 18px;
+    padding-right: 4px;
+  }
+
+  .recommendations-carousel-premium__item {
+    scroll-snap-align: start;
+  }
+
+  .recommendations-carousel-premium__footer {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .recommendations-carousel-premium__track {
+      grid-auto-columns: minmax(74vw, 74vw);
+    }
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign source_collection = section.settings.collection
+  if source_collection == blank
+    assign source_collection = collections.all
+  endif
+%}
+
+<section class="recommendations-carousel-premium" data-rec-carousel-id="{{ section.id }}">
+  <div class="tlm-container">
+    <header class="recommendations-carousel-premium__header">
+      <h2 class="recommendations-carousel-premium__title" data-reveal>{{ section.settings.title }}</h2>
+      <div class="recommendations-carousel-premium__nav" data-reveal>
+        <button class="recommendations-carousel-premium__btn" type="button" data-rec-prev aria-label="Scroll left">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button class="recommendations-carousel-premium__btn" type="button" data-rec-next aria-label="Scroll right">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="recommendations-carousel-premium__viewport" data-rec-viewport>
+      <div class="recommendations-carousel-premium__track">
+        {% if request.page_type == 'product' and recommendations.products_count > 0 %}
+          {% for product in recommendations.products limit: section.settings.product_count %}
+            <div class="recommendations-carousel-premium__item">
+              {% render 'product-card', product: product, show_quick_add: true %}
+            </div>
+          {% endfor %}
+        {% elsif source_collection != blank and source_collection.products_count > 0 %}
+          {% for product in source_collection.products limit: section.settings.product_count %}
+            <div class="recommendations-carousel-premium__item">
+              {% render 'product-card', product: product, show_quick_add: true %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>No products available for recommendations.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if source_collection != blank and section.settings.show_view_all %}
+      <div class="recommendations-carousel-premium__footer" data-reveal>
+        <a href="{{ source_collection.url }}" class="tlm-btn tlm-btn--ghost" data-magnetic>View all products</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% javascript %}
+  (() => {
+    const root = document.querySelector('[data-rec-carousel-id="{{ section.id }}"]');
+    if (!root) return;
+
+    const viewport = root.querySelector('[data-rec-viewport]');
+    const prevBtn = root.querySelector('[data-rec-prev]');
+    const nextBtn = root.querySelector('[data-rec-next]');
+    if (!viewport || !prevBtn || !nextBtn) return;
+
+    const updateButtons = () => {
+      const max = viewport.scrollWidth - viewport.clientWidth;
+      prevBtn.disabled = viewport.scrollLeft <= 0;
+      nextBtn.disabled = viewport.scrollLeft >= max - 2;
+    };
+
+    const scrollAmount = () => Math.max(240, viewport.clientWidth * 0.72);
+
+    prevBtn.addEventListener('click', () => {
+      viewport.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      viewport.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+    });
+
+    viewport.addEventListener('scroll', updateButtons, { passive: true });
+    window.addEventListener('resize', updateButtons);
+    updateButtons();
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Recommendations carousel",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Trending now" },
+    { "type": "collection", "id": "collection", "label": "Fallback collection" },
+    { "type": "range", "id": "product_count", "label": "Products to show", "min": 4, "max": 12, "step": 1, "default": 8 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show view all button", "default": true }
+  ],
+  "presets": [
+    {
+      "name": "Recommendations carousel"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+{% doc %}
+  Renders a premium badge/pill component for status, tags, and labels.
+  
+  @param {string} text - Badge text
+  @param {string} [variant] - Badge style: 'primary' (default), 'success', 'warning', 'error', 'info'
+  @param {string} [size] - Badge size: 'sm' (default), 'md', 'lg'
+  @param {string} [icon] - Optional icon or emoji
+  @param {string} [class] - Additional CSS classes
+{% enddoc %}
+
+{% stylesheet %}
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .badge-sm {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .badge-md {
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .badge-lg {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+
+  .badge-primary {
+    background: var(--gradient-primary);
+    color: var(--color-white);
+  }
+
+  .badge-success {
+    background: var(--color-success);
+    color: var(--color-white);
+  }
+
+  .badge-warning {
+    background: var(--color-warning);
+    color: var(--color-white);
+  }
+
+  .badge-error {
+    background: var(--color-error);
+    color: var(--color-white);
+  }
+
+  .badge-info {
+    background: var(--color-info);
+    color: var(--color-white);
+  }
+
+  .badge-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+{% endstylesheet %}
+
+<span class="badge badge-{{ size | default: 'md' }} badge-{{ variant | default: 'primary' }} {{ class }}">
+  {% if icon %}<span class="badge-icon">{{ icon }}</span>{% endif %}
+  {{ text }}
+</span>

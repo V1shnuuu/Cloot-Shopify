@@ -1,0 +1,152 @@
+{% stylesheet %}
+  .tlm-search-page {
+    padding: 80px 0 120px;
+  }
+
+  .tlm-search-page__header {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+
+  .tlm-search-page__subtext {
+    color: var(--tlm-muted);
+    max-width: 620px;
+    line-height: 1.7;
+  }
+
+  .tlm-search-page__form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .tlm-search-page__form input {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+  }
+
+  .tlm-search-page__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tlm-search-page__chips a {
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    border-radius: 999px;
+    padding: 9px 12px;
+    color: var(--tlm-muted);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .tlm-search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+  }
+
+  .tlm-search-card {
+    border-radius: 10px;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    padding: 20px;
+    text-decoration: none;
+    display: grid;
+    gap: 8px;
+    transition: transform 260ms var(--tlm-ease), border-color 260ms var(--tlm-ease);
+  }
+
+  .tlm-search-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(214, 201, 170, 0.36);
+  }
+
+  .tlm-search-card__title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .tlm-search-card__type {
+    color: var(--tlm-muted);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-search-pagination {
+    grid-column: 1 / -1;
+    margin-top: 32px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-search-page__form {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-search-page">
+  <div class="tlm-search-page__header tlm-container">
+    <p class="tlm-eyebrow" data-reveal>Search</p>
+    <h1 class="tlm-title" data-reveal>{{ 'search.title' | t }}</h1>
+    <p class="tlm-search-page__subtext" data-reveal>Find the exact symbol, tee, keychain, or custom piece that matches the identity you want to carry.</p>
+    <form class="tlm-search-page__form" action="{{ routes.search_url }}" method="get" role="search">
+      <input
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="Search Cloot"
+        aria-label="Search"
+      >
+      <button class="tlm-btn tlm-btn--ghost" type="submit" data-magnetic>Explore</button>
+    </form>
+    <div class="tlm-search-page__chips" data-reveal>
+      <a href="{{ routes.search_url }}?q=3D%20logos">3D Logos</a>
+      <a href="{{ routes.search_url }}?q=clothing">Clothing</a>
+      <a href="{{ routes.search_url }}?q=keychains">Keychains</a>
+      <a href="{{ routes.search_url }}?q=custom">Custom</a>
+    </div>
+  </div>
+
+  {% if search.performed %}
+    {% if search.results_count == 0 %}
+      <div class="tlm-container">
+        <p class="tlm-search-card__type">No results found.</p>
+      </div>
+    {% else %}
+      <div class="tlm-search-results tlm-container">
+        {% paginate search.results by 18 %}
+          {% for result in search.results %}
+            {% if result.object_type == 'product' %}
+              {% render 'product-card', product: result, show_quick_add: false %}
+            {% else %}
+              <a class="tlm-search-card" href="{{ result.url }}" data-reveal>
+                <span class="tlm-search-card__type">{{ result.object_type }}</span>
+                <span class="tlm-search-card__title">{{ result.title }}</span>
+              </a>
+            {% endif %}
+          {% endfor %}
+          <div class="tlm-search-pagination">
+            {{ paginate | default_pagination }}
+          </div>
+        {% endpaginate %}
+      </div>
+    {% endif %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Cloot Search",
+  "settings": []
+}
+{% endschema %}

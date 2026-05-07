@@ -1,0 +1,711 @@
+{% liquid
+  assign featured_collection = section.settings.featured_collection
+  if featured_collection == blank
+    assign featured_collection = collections.all
+  endif
+%}
+
+{% stylesheet %}
+  .cine-landing {
+    position: relative;
+    overflow: clip;
+    background: radial-gradient(circle at 15% 12%, rgba(214, 201, 170, 0.09), transparent 36%), #060606;
+  }
+
+  .cine-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: grid;
+    place-content: center;
+    gap: 14px;
+    background: radial-gradient(circle at 50% 30%, rgba(214, 201, 170, 0.16), #050505 60%);
+    transition: opacity 700ms var(--tlm-ease-cinematic), visibility 700ms var(--tlm-ease-cinematic);
+    pointer-events: auto;
+  }
+
+  .cine-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .cine-loader__brand {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--tlm-fg);
+    pointer-events: none;
+  }
+
+  .cine-hero {
+    position: relative;
+    min-height: 100vh;
+    border-radius: 24px;
+    margin: 12px var(--tlm-page-gutter) 0;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    isolation: isolate;
+  }
+
+  .cine-hero__media,
+  .cine-hero__overlay,
+  .cine-hero__glow,
+  .cine-hero__grain {
+    position: absolute;
+    inset: 0;
+  }
+
+  .cine-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+  }
+
+  .cine-hero__overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
+    z-index: 1;
+  }
+
+  .cine-hero__glow {
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(214, 201, 170, 0.15), transparent 45%);
+  }
+
+  .cine-hero__grain {
+    z-index: 1;
+    opacity: 0.15;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .cine-hero__content {
+    position: relative;
+    z-index: 2;
+    padding: clamp(120px, 15vh, 180px) 0 clamp(70px, 10vh, 110px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 32px;
+  }
+
+  .cine-hero__brand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-family: var(--tlm-font-display);
+    font-size: clamp(8rem, 25vw, 30rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(242, 241, 237, 0.03);
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .cine-hero__title {
+    font-family: var(--tlm-font-display);
+    text-transform: uppercase;
+    line-height: 0.85;
+    font-size: clamp(3rem, 10vw, 9rem);
+    letter-spacing: -0.02em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cine-hero__title > span {
+    display: inline-block;
+  }
+
+  .cine-hero__subtitle {
+    max-width: 56ch;
+    color: var(--tlm-muted);
+    line-height: 1.8;
+  }
+
+  .cine-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .cine-hero__scroll {
+    width: 2px;
+    height: 56px;
+    background: rgba(242, 241, 237, 0.2);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .cine-hero__scroll span {
+    display: block;
+    width: 100%;
+    height: 42%;
+    background: var(--tlm-fg);
+    animation: cine-scroll 1.8s ease-in-out infinite;
+  }
+
+  .cine-marquee {
+    margin-top: clamp(30px, 5vw, 60px);
+    border-block: 1px solid rgba(242, 241, 237, 0.12);
+    overflow: hidden;
+  }
+
+  .cine-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: cine-marquee 22s linear infinite;
+  }
+
+  .cine-marquee__track span {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(1.8rem, 6vw, 5rem);
+    opacity: 0.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    white-space: nowrap;
+  }
+
+  .cine-scene {
+    padding: clamp(58px, 8vw, 110px) 0;
+  }
+
+  .cine-scene__header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .cine-scene__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(1.8rem, 4.3vw, 3.8rem);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .cine-scene__text {
+    color: var(--tlm-muted);
+    max-width: 58ch;
+    line-height: 1.7;
+  }
+
+  .cine-products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .cine-horizontal {
+    position: relative;
+  }
+
+  .cine-horizontal__viewport {
+    overflow: hidden;
+  }
+
+  .cine-horizontal__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(100vw, 100vw);
+  }
+
+  .cine-horizontal__panel {
+    min-height: 84vh;
+    display: grid;
+    align-items: center;
+    padding: clamp(20px, 4vw, 58px);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+    border: 1px solid rgba(242, 241, 237, 0.12);
+  }
+
+  .cine-horizontal__layout {
+    width: min(100%, var(--tlm-max-width));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 22px;
+    align-items: center;
+  }
+
+  .cine-horizontal__panel h3 {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2rem, 5vw, 4.8rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .cine-horizontal__panel p {
+    color: var(--tlm-muted);
+    line-height: 1.8;
+    margin-top: 10px;
+  }
+
+  .cine-horizontal__image {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    aspect-ratio: 4 / 5;
+  }
+
+  .cine-horizontal__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cine-story {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .cine-story__media {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    aspect-ratio: 4 / 5;
+  }
+
+  .cine-story__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cine-collections {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .cine-collection-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    min-height: 320px;
+    text-decoration: none;
+    display: grid;
+    align-items: end;
+    isolation: isolate;
+  }
+
+  .cine-collection-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.82));
+  }
+
+  .cine-collection-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 650ms var(--tlm-ease-cinematic);
+  }
+
+  .cine-collection-card:hover img {
+    transform: scale(1.07);
+  }
+
+  .cine-collection-card__content {
+    position: relative;
+    z-index: 2;
+    padding: 16px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .cine-testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .cine-testimonial {
+    position: relative;
+    border-radius: 20px;
+    padding: clamp(24px, 5vw, 44px);
+    background: var(--tlm-bg-glass);
+    border: 1px solid rgba(242, 241, 237, 0.08);
+    backdrop-filter: blur(var(--tlm-blur-strong));
+    transition: all 420ms var(--tlm-ease-cinematic);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: var(--tlm-shadow-soft);
+  }
+
+  .cine-testimonial:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(214, 201, 170, 0.4);
+    background: var(--tlm-bg-elev);
+    box-shadow: var(--tlm-shadow-hover), 0 0 40px rgba(214, 201, 170, 0.1);
+  }
+
+  .cine-testimonial p {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    line-height: 1.6;
+    color: var(--tlm-fg);
+    font-style: italic;
+    opacity: 0.95;
+  }
+
+  .cine-testimonial .tlm-eyebrow {
+    margin-top: auto;
+    font-weight: 600;
+    color: var(--tlm-accent);
+    letter-spacing: 0.15em;
+  }
+
+  .cine-newsletter {
+    position: relative;
+    border-radius: 20px;
+    padding: clamp(26px, 5vw, 48px);
+    border: 1px solid rgba(242, 241, 237, 0.16);
+    overflow: hidden;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
+  }
+
+  .cine-newsletter__form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .cine-newsletter__form input {
+    border-radius: 999px;
+    border: 1px solid rgba(242, 241, 237, 0.22);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--tlm-fg);
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .cine-landing .is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes cine-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes cine-scroll {
+    0% { transform: translateY(-100%); }
+    65% { transform: translateY(110%); }
+    100% { transform: translateY(170%); }
+  }
+
+  @media screen and (max-width: 989px) {
+    .cine-products,
+    .cine-collections,
+    .cine-testimonials {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cine-story,
+    .cine-horizontal__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .cine-hero {
+      margin-inline: 12px;
+      min-height: 90vh;
+      border-radius: 14px;
+    }
+
+    .cine-products,
+    .cine-collections,
+    .cine-testimonials {
+      grid-template-columns: 1fr;
+    }
+
+    .cine-newsletter__form {
+      grid-template-columns: 1fr;
+    }
+
+    .cine-horizontal__panel {
+      min-height: 76vh;
+    }
+  }
+{% endstylesheet %}
+
+<section class="cine-landing" data-cinematic-homepage>
+  <div class="cine-loader" data-cine-loader>
+    <div class="cine-loader__brand">{{ section.settings.brand_mark }}</div>
+  </div>
+
+  <div class="cine-hero" data-cine-hero>
+    <div class="cine-hero__media" data-hero-media>
+      {% if section.settings.hero_image != blank %}
+        {% render 'image', image: section.settings.hero_image, width: 2400, height: 3000, crop: 'center' %}
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=2200&q=80" alt="Luxury fashion hero" loading="eager">
+      {% endif %}
+    </div>
+    <div class="cine-hero__overlay"></div>
+    <div class="cine-hero__glow" data-hero-glow></div>
+    <div class="cine-hero__grain"></div>
+    <p class="cine-hero__brand" data-hero-brand>{{ section.settings.brand_mark }}</p>
+
+    <div class="tlm-container">
+      <div class="cine-hero__content">
+        <p class="cine-hero__eyebrow" data-hero-fade>{{ section.settings.hero_eyebrow }}</p>
+        <h1 class="cine-hero__title">
+          <span data-hero-word>{{ section.settings.hero_title_line_one }}</span>
+          <span data-hero-word>{{ section.settings.hero_title_line_two }}</span>
+        </h1>
+        <p class="cine-hero__subtitle" data-hero-fade>{{ section.settings.hero_subtitle }}</p>
+        <div class="cine-hero__actions" data-hero-fade>
+          <a class="tlm-btn" href="{{ section.settings.primary_cta_link }}" data-magnetic>{{ section.settings.primary_cta_label }}</a>
+          <a class="tlm-btn tlm-btn--ghost" href="{{ section.settings.secondary_cta_link }}" data-magnetic>{{ section.settings.secondary_cta_label }}</a>
+        </div>
+        <div class="cine-hero__scroll" aria-hidden="true" data-hero-fade><span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="cine-marquee" data-cine-scene>
+    <div class="cine-marquee__track">
+      <span>{{ section.settings.marquee_text }}</span>
+      <span>{{ section.settings.marquee_text }}</span>
+      <span>{{ section.settings.marquee_text }}</span>
+      <span>{{ section.settings.marquee_text }}</span>
+    </div>
+  </section>
+
+  <section class="cine-scene" data-cine-scene>
+    <div class="tlm-container">
+      <div class="cine-scene__header">
+        <div>
+          <p class="tlm-eyebrow">Curated now</p>
+          <h2 class="cine-scene__title">Premium product showcase</h2>
+        </div>
+        <p class="cine-scene__text">An editorial product wall with cinematic spacing, glow-hover interactions, and clean purchase pathways.</p>
+      </div>
+
+      <div class="cine-products">
+        {% for product in featured_collection.products limit: section.settings.featured_products_limit %}
+          <div data-float-card>
+            {% render 'product-card', product: product, show_quick_add: true %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="cine-horizontal" data-horizontal-story>
+    <div class="cine-horizontal__viewport" data-horizontal-viewport>
+      <div class="cine-horizontal__track" data-horizontal-track>
+        <article class="cine-horizontal__panel">
+          <div class="cine-horizontal__layout">
+            <div>
+              <p class="tlm-eyebrow">Scene 01</p>
+              <h3>Monochrome velocity</h3>
+              <p>Precision-tailored silhouettes engineered for high-impact city movement and cinematic night lighting.</p>
+            </div>
+            <div class="cine-horizontal__image">
+              <img src="https://images.unsplash.com/photo-1464863979621-258859e62245?auto=format&fit=crop&w=1800&q=80" alt="Model in monochrome look" loading="lazy">
+            </div>
+          </div>
+        </article>
+        <article class="cine-horizontal__panel">
+          <div class="cine-horizontal__layout">
+            <div>
+              <p class="tlm-eyebrow">Scene 02</p>
+              <h3>Techwear architecture</h3>
+              <p>Layered textures, sharp profile lines, and technical drape create a premium future-facing wardrobe language.</p>
+            </div>
+            <div class="cine-horizontal__image">
+              <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1800&q=80" alt="Luxury technical outfit" loading="lazy">
+            </div>
+          </div>
+        </article>
+        <article class="cine-horizontal__panel">
+          <div class="cine-horizontal__layout">
+            <div>
+              <p class="tlm-eyebrow">Scene 03</p>
+              <h3>Editorial warmth</h3>
+              <p>Relaxed luxury tones and cinematic composition designed for modern brand storytelling and conversion flow.</p>
+            </div>
+            <div class="cine-horizontal__image">
+              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=80" alt="Editorial fashion portrait" loading="lazy">
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cine-scene" data-cine-scene>
+    <div class="tlm-container">
+      <div class="cine-story">
+        <div class="cine-story__media">
+          {% if section.settings.story_image != blank %}
+            {% render 'image', image: section.settings.story_image, width: 1800, height: 2100, crop: 'center' %}
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1495121605193-b116b5b09a7b?auto=format&fit=crop&w=1800&q=80" alt="Brand story image" loading="lazy">
+          {% endif %}
+        </div>
+        <div>
+          <p class="tlm-eyebrow">Brand story</p>
+          <h2 class="cine-scene__title">Crafted in motion, framed in light</h2>
+          <p class="cine-scene__text">Every drop merges technical detailing with expressive fashion direction. We build garments that move naturally from runway energy to everyday precision.</p>
+          <a class="tlm-btn tlm-btn--ghost" href="{{ section.settings.story_cta_link }}" data-magnetic>{{ section.settings.story_cta_label }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cine-scene" data-cine-scene>
+    <div class="tlm-container">
+      <div class="cine-scene__header">
+        <div>
+          <p class="tlm-eyebrow">Collections</p>
+          <h2 class="cine-scene__title">Immersive collection grid</h2>
+        </div>
+      </div>
+      <div class="cine-collections">
+        {% for block in section.blocks %}
+          {% if block.type == 'collection_card' %}
+            {% assign card_collection = block.settings.collection %}
+            <a class="cine-collection-card" href="{{ card_collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: block.settings.title }}
+              {% elsif card_collection.featured_image != blank %}
+                {{ card_collection.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: card_collection.title }}
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=1200&q=80" alt="Collection mood" loading="lazy">
+              {% endif %}
+              <div class="cine-collection-card__content">
+                <p class="tlm-eyebrow">Collection</p>
+                <h3>{{ block.settings.title | default: card_collection.title | default: 'Featured drop' }}</h3>
+              </div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="cine-scene" data-cine-scene>
+    <div class="tlm-container">
+      <div class="cine-scene__header">
+        <div>
+          <p class="tlm-eyebrow">Social proof</p>
+          <h2 class="cine-scene__title">Testimonials with depth</h2>
+        </div>
+      </div>
+      <div class="cine-testimonials">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <article class="cine-testimonial" data-float-card {{ block.shopify_attributes }}>
+              <p class="tlm-eyebrow">{% for i in (1..block.settings.rating) %}★{% endfor %}</p>
+              <p>{{ block.settings.quote }}</p>
+              <p class="tlm-eyebrow">{{ block.settings.name }}</p>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="cine-scene" data-cine-scene>
+    <div class="tlm-container">
+      <div class="cine-newsletter">
+        <p class="tlm-eyebrow">Insider access</p>
+        <h2 class="cine-scene__title">Join the cinematic drop list</h2>
+        <p class="cine-scene__text">Get launch alerts, early access, and behind-the-scenes editorials before anyone else.</p>
+        {% form 'customer', class: 'cine-newsletter__form' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="email" name="contact[email]" placeholder="Enter your email" required>
+          <button class="tlm-btn" type="submit" data-magnetic>Subscribe</button>
+        {% endform %}
+      </div>
+    </div>
+  </section>
+
+  <script src="{{ 'cinematic-homepage.js' | asset_url }}" defer></script>
+</section>
+
+{% schema %}
+{
+  "name": "Landing cinematic",
+  "settings": [
+    { "type": "text", "id": "brand_mark", "label": "Preloader brand", "default": "Cloot" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Hero eyebrow", "default": "New season edit" },
+    { "type": "text", "id": "hero_title_line_one", "label": "Hero title line 1", "default": "Cinematic" },
+    { "type": "text", "id": "hero_title_line_two", "label": "Hero title line 2", "default": "Luxury" },
+    { "type": "textarea", "id": "hero_subtitle", "label": "Hero subtitle", "default": "Immersive fashion storytelling shaped by precision silhouettes, layered motion, and high-conversion product presentation." },
+    { "type": "text", "id": "primary_cta_label", "label": "Primary CTA label", "default": "Shop now" },
+    { "type": "url", "id": "primary_cta_link", "label": "Primary CTA link" },
+    { "type": "text", "id": "secondary_cta_label", "label": "Secondary CTA label", "default": "View collection" },
+    { "type": "url", "id": "secondary_cta_link", "label": "Secondary CTA link" },
+    { "type": "text", "id": "marquee_text", "label": "Marquee text", "default": "Premium silhouettes • New drops weekly • Crafted in Chennai •" },
+    { "type": "collection", "id": "featured_collection", "label": "Featured products collection" },
+    { "type": "range", "id": "featured_products_limit", "label": "Featured products shown", "min": 3, "max": 9, "step": 1, "default": 6 },
+    { "type": "image_picker", "id": "story_image", "label": "Brand story image" },
+    { "type": "text", "id": "story_cta_label", "label": "Story CTA label", "default": "Explore brand" },
+    { "type": "url", "id": "story_cta_link", "label": "Story CTA link" }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Collection card",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Override image" },
+        { "type": "text", "id": "title", "label": "Title" }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "The motion quality feels premium and the product presentation drives stronger engagement." },
+        { "type": "text", "id": "name", "label": "Name", "default": "A. Verma" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Landing cinematic",
+      "blocks": [
+        { "type": "collection_card" },
+        { "type": "collection_card" },
+        { "type": "collection_card" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

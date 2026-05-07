@@ -1,0 +1,29 @@
+{% doc %}
+  Renders a commerce workflow timeline.
+
+  @param {string} current_step
+{% enddoc %}
+
+{% assign active_step = current_step | default: 'order' %}
+<ol class="tlm-status-timeline" data-current-step="{{ active_step }}">
+  <li class="{% if active_step == 'order' or active_step == 'reserved' or active_step == 'warehouse' or active_step == 'shipped' or active_step == 'delivered' %}is-active{% endif %}">
+    <strong>Order</strong>
+    <span>Created</span>
+  </li>
+  <li class="{% if active_step == 'reserved' or active_step == 'warehouse' or active_step == 'shipped' or active_step == 'delivered' %}is-active{% endif %}">
+    <strong>Inventory</strong>
+    <span>Reserved</span>
+  </li>
+  <li class="{% if active_step == 'warehouse' or active_step == 'shipped' or active_step == 'delivered' %}is-active{% endif %}">
+    <strong>Warehouse</strong>
+    <span>Processing</span>
+  </li>
+  <li class="{% if active_step == 'shipped' or active_step == 'delivered' %}is-active{% endif %}">
+    <strong>Shipping</strong>
+    <span>In transit</span>
+  </li>
+  <li class="{% if active_step == 'delivered' %}is-active{% endif %}">
+    <strong>Delivery</strong>
+    <span>Complete</span>
+  </li>
+</ol>

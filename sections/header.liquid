@@ -1,0 +1,905 @@
+<header class="tlm-nav full-width" data-tlm-nav>
+  {% if section.settings.announcement_text != blank %}
+    <div class="tlm-announcement tlm-glass">
+      <a class="tlm-announcement__inner" href="{{ section.settings.announcement_link | default: routes.all_products_collection_url }}">
+        <span>{{ section.settings.announcement_text }}</span>
+        <span>{{ section.settings.announcement_text }}</span>
+        <span>{{ section.settings.announcement_text }}</span>
+      </a>
+    </div>
+  {% endif %}
+  <div class="tlm-nav__bar tlm-glass">
+    <div class="tlm-nav__left">
+      <button class="tlm-icon-btn tlm-nav__toggle" type="button" data-mobile-open aria-label="Open menu" aria-expanded="false">
+        {% render 'icon-menu' %}
+      </button>
+      <a class="tlm-nav__logo" href="{{ routes.root_url }}">
+        <span class="tlm-nav__logo-text">{{ section.settings.brand_text }}</span>
+      </a>
+    </div>
+
+    <nav class="tlm-nav__menu" aria-label="Primary">
+      <ul class="tlm-nav__list">
+        {% for link in section.settings.menu.links %}
+          {%- assign link_label = link.title | strip -%}
+          {%- assign highlight_label = section.settings.highlight_label | strip -%}
+          {%- assign is_highlight = false -%}
+          {% if highlight_label != blank %}
+            {% if link_label == highlight_label %}
+              {% assign is_highlight = true %}
+            {% endif %}
+          {% endif %}
+          <li class="tlm-nav__item">
+            <a class="tlm-nav__link tlm-underline{% if is_highlight %} is-highlight{% endif %}" href="{{ link.url }}" data-mega-trigger data-mega-target="{{ link.title | handleize }}" data-magnetic>
+              <span>{{ link.title }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="tlm-nav__actions">
+      <button class="tlm-icon-btn" type="button" data-search-open aria-label="Search">
+        {% render 'icon-search' %}
+      </button>
+      {% if shop.customer_accounts_enabled %}
+        <a class="tlm-icon-btn" href="{{ routes.account_url }}" aria-label="Account">
+          {% render 'icon-account' %}
+        </a>
+      {% endif %}
+      {% if section.settings.wishlist_link != blank %}
+        <a class="tlm-icon-btn" href="{{ section.settings.wishlist_link }}" aria-label="Wishlist">
+          {% render 'icon-heart' %}
+        </a>
+      {% endif %}
+      <button class="tlm-icon-btn" type="button" data-cart-open aria-label="Cart">
+        <span class="tlm-cart-count{% if cart.item_count == 0 %} is-hidden{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+        {% render 'icon-cart' %}
+      </button>
+    </div>
+  </div>
+
+  <div class="tlm-mega" data-mega aria-hidden="true">
+    <div class="tlm-mega__backdrop" data-mega-backdrop></div>
+    <div class="tlm-mega__panels tlm-glass">
+      {% for block in section.blocks %}
+        {%- assign panel_key = block.settings.trigger_label | handleize -%}
+        {% if panel_key == blank %}
+          {% assign panel_key = block.id %}
+        {% endif %}
+        <div class="tlm-mega__panel" data-mega-panel="{{ panel_key }}" {{ block.shopify_attributes }}>
+          <div class="tlm-mega__media">
+            {% if block.settings.image != blank %}
+              {% render 'image',
+                class: 'tlm-mega__image',
+                image: block.settings.image,
+                width: 1100,
+                height: 1300,
+                crop: 'center'
+              %}
+            {% else %}
+              <div class="tlm-mega__image tlm-mega__placeholder"></div>
+            {% endif %}
+          </div>
+          <div class="tlm-mega__content">
+            <div class="tlm-mega__editorial">
+              {% if block.settings.eyebrow != blank %}
+                <p class="tlm-eyebrow">{{ block.settings.eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.heading != blank %}
+                <h3 class="tlm-mega__title">{{ block.settings.heading }}</h3>
+              {% endif %}
+              {% if block.settings.description != blank %}
+                <p class="tlm-mega__text">{{ block.settings.description }}</p>
+              {% endif %}
+              {% if block.settings.cta_label != blank %}
+                {% if block.settings.cta_link != blank %}
+                  <a class="tlm-btn" href="{{ block.settings.cta_link }}" data-magnetic>
+                    {{ block.settings.cta_label }}
+                  </a>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="tlm-mega__links">
+              {% if block.settings.menu != blank %}
+                <div class="tlm-mega__column">
+                  {% if block.settings.menu_label != blank %}
+                    <p class="tlm-eyebrow">{{ block.settings.menu_label }}</p>
+                  {% endif %}
+                  <ul>
+                    {% for link in block.settings.menu.links %}
+                      <li><a class="tlm-underline" href="{{ link.url }}" data-mega-preview="{{ link.title | escape }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              {% if block.settings.menu_secondary != blank %}
+                <div class="tlm-mega__column">
+                  {% if block.settings.menu_secondary_label != blank %}
+                    <p class="tlm-eyebrow">{{ block.settings.menu_secondary_label }}</p>
+                  {% endif %}
+                  <ul>
+                    {% for link in block.settings.menu_secondary.links %}
+                      <li><a class="tlm-underline" href="{{ link.url }}" data-mega-preview="{{ link.title | escape }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+            <div class="tlm-mega__ticker" aria-hidden="true">
+              <span>{{ block.settings.preview_phrase | default: 'Luxury streetwear in motion' }}</span>
+              <span>{{ block.settings.preview_phrase | default: 'Luxury streetwear in motion' }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="tlm-mobile" data-mobile-menu aria-hidden="true">
+    <div class="tlm-mobile__panel" data-swipe-close>
+      <div class="tlm-mobile__bar">
+        <span class="tlm-mobile__title">{{ section.settings.brand_text }}</span>
+        <button class="tlm-icon-btn" type="button" data-mobile-close aria-label="Close menu">
+          {% render 'icon-close' %}
+        </button>
+      </div>
+      <nav class="tlm-mobile__nav" aria-label="Mobile">
+        <ul>
+          {% for link in section.settings.menu.links %}
+            <li style="--item-index: {{ forloop.index0 }};"><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      <div class="tlm-mobile__utility">
+        <button class="tlm-btn tlm-btn--ghost" type="button" data-search-open>Search</button>
+        {% if shop.customer_accounts_enabled %}
+          <a class="tlm-btn tlm-btn--ghost" href="{{ routes.account_url }}">Account</a>
+        {% endif %}
+        {% if section.settings.wishlist_link != blank %}
+          <a class="tlm-btn tlm-btn--ghost" href="{{ section.settings.wishlist_link }}">Wishlist</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% render 'predictive-search-overlay' %}
+</header>
+
+{% stylesheet %}
+  .tlm-nav {
+    position: sticky;
+    top: 12px;
+    z-index: 50;
+    padding: 0 var(--tlm-page-gutter);
+    margin-top: 12px;
+  }
+
+  .tlm-announcement {
+    width: min(100% - var(--tlm-page-gutter) * 2, var(--tlm-max-width));
+    margin: 0 auto 8px;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .tlm-announcement__inner {
+    display: flex;
+    width: max-content;
+    text-decoration: none;
+    animation: tlm-announcement-slide 24s linear infinite;
+  }
+
+  .tlm-announcement__inner span {
+    padding: 8px 24px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--tlm-muted);
+    white-space: nowrap;
+  }
+
+  .tlm-nav__bar {
+    height: var(--tlm-nav-height);
+    border: 1px solid var(--tlm-line);
+    border-radius: 999px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    padding: 0 24px;
+    max-width: var(--tlm-max-width);
+    margin: 0 auto;
+    box-shadow: var(--tlm-shadow-soft);
+    transition: height 240ms var(--tlm-ease), background 240ms var(--tlm-ease), border-color 240ms var(--tlm-ease);
+  }
+
+  .tlm-nav.is-scrolled .tlm-nav__bar {
+    height: var(--tlm-nav-height-compact);
+    background: var(--tlm-bg-elev);
+    border-color: rgba(242, 241, 237, 0.2);
+  }
+
+  .tlm-nav__left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .tlm-nav__logo {
+    text-decoration: none;
+  }
+
+  .tlm-nav__logo-text {
+    font-family: var(--tlm-font-display);
+    font-size: 14px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  .tlm-nav__menu {
+    justify-self: center;
+  }
+
+  .tlm-nav__list {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tlm-nav__link {
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 0;
+    color: inherit;
+  }
+
+  .tlm-nav__link.is-highlight span {
+    color: var(--tlm-accent);
+  }
+
+  .tlm-nav__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+  }
+
+  .tlm-nav__toggle {
+    display: none;
+  }
+
+  .tlm-cart-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    background: rgba(214, 201, 170, 0.2);
+    border: 1px solid rgba(214, 201, 170, 0.6);
+    padding: 2px 6px;
+    border-radius: 999px;
+  }
+
+  .tlm-cart-count.is-hidden {
+    display: none;
+  }
+
+  .tlm-mega {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms var(--tlm-ease);
+  }
+
+  .tlm-mega.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .tlm-mega__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  .tlm-mega__panels {
+    position: relative;
+    width: min(100% - var(--tlm-page-gutter) * 2, 1200px);
+    margin: 120px auto 0;
+    border-radius: 14px;
+    padding: 36px;
+    border: 1px solid rgba(242, 241, 237, 0.2);
+  }
+
+  .tlm-mega__panel {
+    display: none;
+    grid-template-columns: 1.05fr 1.5fr;
+    gap: 32px;
+  }
+
+  .tlm-mega__panel.is-active {
+    display: grid;
+  }
+
+  .tlm-mega__panel.is-active .tlm-mega__media,
+  .tlm-mega__panel.is-active .tlm-mega__editorial,
+  .tlm-mega__panel.is-active .tlm-mega__column,
+  .tlm-mega__panel.is-active .tlm-mega__ticker {
+    animation: tlm-mega-rise 560ms var(--tlm-ease-cinematic) both;
+  }
+
+  .tlm-mega__panel.is-active .tlm-mega__editorial {
+    animation-delay: 70ms;
+  }
+
+  .tlm-mega__panel.is-active .tlm-mega__column:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .tlm-mega__media {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 320px;
+  }
+
+  .tlm-mega__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 28% 20%, rgba(214, 201, 170, 0.2), transparent 34%);
+    mix-blend-mode: screen;
+  }
+
+  .tlm-mega__image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tlm-mega__placeholder {
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+    height: 100%;
+  }
+
+  .tlm-mega__content {
+    display: grid;
+    gap: 28px;
+  }
+
+  .tlm-mega__title {
+    font-family: var(--tlm-font-display);
+    font-size: 2.4rem;
+    margin: 8px 0 12px;
+  }
+
+  .tlm-mega__text {
+    color: var(--tlm-muted);
+    max-width: 360px;
+  }
+
+  .tlm-mega__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .tlm-mega__ticker {
+    align-self: end;
+    overflow: hidden;
+    border-top: 1px solid rgba(242, 241, 237, 0.08);
+    padding-top: 18px;
+    color: rgba(242, 241, 237, 0.34);
+    display: flex;
+    gap: 22px;
+    font-family: var(--tlm-font-display);
+    font-size: clamp(1.8rem, 4vw, 4.8rem);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tlm-mega__ticker span {
+    animation: tlm-announcement-slide 18s linear infinite;
+  }
+
+  .tlm-mega__column ul {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    padding: 0;
+    margin: 12px 0 0;
+  }
+
+  .tlm-mobile {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms var(--tlm-ease);
+  }
+
+  .tlm-mobile.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .tlm-mobile__panel {
+    height: 100%;
+    background: rgba(10, 10, 10, 0.96);
+    padding: 24px var(--tlm-page-gutter) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    transform: translateX(-16px);
+    transition: transform 320ms var(--tlm-ease-cinematic);
+    touch-action: pan-y;
+  }
+
+  .tlm-mobile.is-open .tlm-mobile__panel {
+    transform: translateX(0);
+  }
+
+  .tlm-mobile__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tlm-mobile__title {
+    font-family: var(--tlm-font-display);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+
+  .tlm-mobile__nav ul {
+    list-style: none;
+    display: grid;
+    gap: 18px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tlm-mobile__nav a {
+    font-size: 20px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: block;
+    transform: translateY(18px);
+    opacity: 0;
+    transition: opacity 420ms var(--tlm-ease-cinematic), transform 420ms var(--tlm-ease-cinematic);
+    transition-delay: calc(var(--item-index, 0) * 55ms);
+  }
+
+  .tlm-mobile.is-open .tlm-mobile__nav a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tlm-mobile__utility {
+    display: grid;
+    gap: 12px;
+  }
+
+  .tlm-search,
+  .tlm-cart {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms var(--tlm-ease);
+    z-index: 60;
+  }
+
+  .tlm-search.is-open,
+  .tlm-cart.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .tlm-search__backdrop,
+  .tlm-cart__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 6, 6, 0.72);
+  }
+
+  .tlm-search__panel {
+    position: relative;
+    width: min(100% - var(--tlm-page-gutter) * 2, 620px);
+    margin: 120px auto 0;
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(242, 241, 237, 0.16);
+    background: rgba(10, 10, 10, 0.92);
+  }
+
+  .tlm-cart__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: min(100%, 420px);
+    padding: 28px;
+    border-left: 1px solid rgba(242, 241, 237, 0.16);
+    background: rgba(10, 10, 10, 0.96);
+    transform: translateX(110%);
+    transition: transform 280ms var(--tlm-ease);
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+
+  .tlm-cart.is-open .tlm-cart__panel {
+    transform: translateX(0);
+  }
+
+  .tlm-search__header,
+  .tlm-cart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .tlm-search__form {
+    display: grid;
+    gap: 16px;
+  }
+
+  .tlm-search__input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+  }
+
+  .tlm-search__results {
+    margin-top: 20px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .tlm-search__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .tlm-search__suggestions a {
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    border-radius: 999px;
+    padding: 8px 11px;
+    text-decoration: none;
+    color: var(--tlm-muted);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: color 220ms var(--tlm-ease), border-color 220ms var(--tlm-ease);
+  }
+
+  .tlm-search__suggestions a:hover {
+    color: var(--tlm-fg);
+    border-color: rgba(214, 201, 170, 0.5);
+  }
+
+  .tlm-search__result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.08);
+    transition: border-color 200ms var(--tlm-ease);
+  }
+
+  .tlm-search__result:hover {
+    border-color: rgba(214, 201, 170, 0.5);
+  }
+
+  .tlm-search__arrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tlm-muted);
+  }
+
+  .tlm-search__empty {
+    color: var(--tlm-muted);
+  }
+
+  .tlm-cart__form {
+    display: grid;
+    gap: 20px;
+  }
+
+  .tlm-cart__progress {
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(242, 241, 237, 0.1);
+    margin-bottom: 8px;
+  }
+
+  .tlm-cart__progress span {
+    display: block;
+    width: var(--cart-progress, 0%);
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(214, 201, 170, 0.35), var(--tlm-accent));
+    transition: width 520ms var(--tlm-ease-cinematic);
+  }
+
+  .tlm-cart__delivery {
+    color: var(--tlm-muted);
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+
+  .tlm-cart__items {
+    display: grid;
+    gap: 20px;
+  }
+
+  .tlm-cart__item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .tlm-cart__media {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tlm-cart__title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .tlm-cart__variant,
+  .tlm-cart__price {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-cart__qty {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .tlm-cart__qty input {
+    width: 60px;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: transparent;
+    color: var(--tlm-fg);
+  }
+
+  .tlm-cart__remove {
+    color: var(--tlm-muted);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .tlm-cart__summary {
+    border-top: 1px solid rgba(242, 241, 237, 0.1);
+    padding-top: 16px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .tlm-cart__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .tlm-cart__actions {
+    display: grid;
+    gap: 10px;
+  }
+
+  @keyframes tlm-announcement-slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-33.333%);
+    }
+  }
+
+  @keyframes tlm-mega-rise {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .tlm-nav__menu {
+      display: none;
+    }
+
+    .tlm-nav__toggle {
+      display: inline-flex;
+    }
+
+    .tlm-nav__bar {
+      grid-template-columns: auto 1fr auto;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-nav {
+      top: 8px;
+    }
+
+    .tlm-announcement {
+      width: calc(100% - 24px);
+    }
+
+    .tlm-nav__bar {
+      height: 64px;
+      padding: 0 18px;
+    }
+
+    .tlm-nav__logo-text {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+    }
+
+    .tlm-search__panel {
+      width: calc(100% - 32px);
+      margin-top: 90px;
+    }
+
+    .tlm-nav__actions {
+      gap: 8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cloot Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement text",
+      "default": "Free shipping above ₹1000 · New drops are live · Custom logos crafted in Chennai"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement link"
+    },
+    {
+      "type": "text",
+      "id": "brand_text",
+      "label": "Brand text",
+      "default": "Cloot"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "highlight_label",
+      "label": "Highlight label",
+      "default": "New Drop"
+    },
+    {
+      "type": "url",
+      "id": "wishlist_link",
+      "label": "Wishlist link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega_panel",
+      "name": "Mega panel",
+      "settings": [
+        {
+          "type": "text",
+          "id": "trigger_label",
+          "label": "Trigger label",
+          "default": "New Drop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Panel image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Featured"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "New silhouettes for the season"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Discover elevated streetwear with sculpted proportions and cinematic layering."
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label",
+          "default": "Explore the drop"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "text",
+          "id": "preview_phrase",
+          "label": "Animated preview phrase",
+          "default": "Explore icons, tees, keychains, and custom pieces"
+        },
+        {
+          "type": "text",
+          "id": "menu_label",
+          "label": "Menu label",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        },
+        {
+          "type": "text",
+          "id": "menu_secondary_label",
+          "label": "Secondary menu label",
+          "default": "Discover"
+        },
+        {
+          "type": "link_list",
+          "id": "menu_secondary",
+          "label": "Secondary menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cloot Header"
+    }
+  ]
+}
+{% endschema %}

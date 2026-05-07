@@ -1,0 +1,618 @@
+{% stylesheet %}
+  .tlm-product {
+    padding: 80px 0 120px;
+  }
+
+  .tlm-product__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .tlm-product__gallery {
+    display: grid;
+    gap: 20px;
+  }
+
+  .tlm-product__image {
+    position: relative;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    cursor: zoom-in;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 0 0 1px rgba(242, 241, 237, 0.08);
+  }
+
+  .tlm-product__image img {
+    transition: transform 820ms var(--tlm-ease-cinematic), filter 820ms var(--tlm-ease-cinematic);
+  }
+
+  .tlm-product__image:hover img {
+    transform: scale(1.04);
+    filter: saturate(0.9) contrast(1.08);
+  }
+
+  .tlm-product__thumbs {
+    position: sticky;
+    top: 110px;
+    display: grid;
+    gap: 10px;
+    align-self: start;
+  }
+
+  .tlm-product__media {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+
+  .tlm-product__thumb {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0.62;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    transition: opacity 200ms var(--tlm-ease), border-color 200ms var(--tlm-ease), transform 200ms var(--tlm-ease);
+  }
+
+  .tlm-product__thumb:hover {
+    opacity: 1;
+    border-color: rgba(214, 201, 170, 0.55);
+    transform: translateX(2px);
+  }
+
+  .tlm-product__content {
+    position: sticky;
+    top: 120px;
+    display: grid;
+    gap: 18px;
+  }
+
+  .tlm-product__price {
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-product__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tlm-product__description {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+
+  .tlm-product__form {
+    display: grid;
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .tlm-product__form label,
+  .tlm-product__legend {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .tlm-product__variant-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .tlm-product__variants {
+    display: grid;
+    gap: 10px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tlm-product__variant-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 10px;
+  }
+
+  .tlm-product__variant-swatch {
+    display: grid;
+    gap: 4px;
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    border-radius: 8px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: border-color 240ms var(--tlm-ease), background 240ms var(--tlm-ease), transform 240ms var(--tlm-ease);
+  }
+
+  .tlm-product__variant-swatch span {
+    color: var(--tlm-muted);
+    font-size: 11px;
+  }
+
+  .tlm-product__variant-swatch.is-active,
+  .tlm-product__variant-input:checked + .tlm-product__variant-swatch {
+    border-color: rgba(214, 201, 170, 0.66);
+    background: rgba(214, 201, 170, 0.08);
+  }
+
+  .tlm-product__variant-input:disabled + .tlm-product__variant-swatch {
+    opacity: 0.42;
+    cursor: not-allowed;
+  }
+
+  .tlm-product__form select,
+  .tlm-product__form input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+  }
+
+  .tlm-product__meta {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(242, 241, 237, 0.1);
+    color: var(--tlm-muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .tlm-product__accordions {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .tlm-product__accordion {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-product__accordion summary {
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-product__accordion div {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+    padding-top: 12px;
+  }
+
+  .tlm-product__timeline {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .tlm-product__timeline-step {
+    position: relative;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 14px;
+    overflow: hidden;
+  }
+
+  .tlm-product__timeline-step::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 2px;
+    background: var(--tlm-accent);
+    animation: tlm-timeline-pulse 2.8s var(--tlm-ease-cinematic) infinite;
+  }
+
+  .tlm-product__timeline-step strong {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .tlm-product__timeline-step span {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-product__floating {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    z-index: 40;
+    width: min(calc(100% - 32px), 760px);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 999px;
+    background: rgba(8, 8, 8, 0.72);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--tlm-shadow-soft);
+  }
+
+  .tlm-product__floating-title {
+    min-width: 0;
+    padding-left: 12px;
+  }
+
+  .tlm-product__floating-title strong,
+  .tlm-product__floating-title span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tlm-product__floating-title strong {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .tlm-product__floating-title span {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-product-more {
+    padding: 0 0 120px;
+  }
+
+  .tlm-product-more__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 28px;
+  }
+
+  .tlm-product-more__grid,
+  .tlm-recently-viewed {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .tlm-review-strip {
+    display: grid;
+    grid-template-columns: 0.55fr 1fr;
+    gap: 28px;
+    align-items: center;
+    margin: 70px auto;
+    padding: 28px;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-review-strip__score {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+  }
+
+  .tlm-review-strip__text {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+
+  .tlm-recent-card {
+    display: grid;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .tlm-recent-card__media {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .tlm-recent-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tlm-recent-card small {
+    color: var(--tlm-muted);
+  }
+
+  @keyframes tlm-timeline-pulse {
+    0%,
+    100% {
+      opacity: 0.28;
+      transform: scaleY(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .tlm-product__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tlm-product__content {
+      position: static;
+    }
+
+    .tlm-product__media {
+      grid-template-columns: 1fr;
+    }
+
+    .tlm-product__thumbs {
+      position: static;
+      display: flex;
+      overflow-x: auto;
+      order: 2;
+    }
+
+    .tlm-product__thumb {
+      width: 68px;
+      flex: 0 0 68px;
+    }
+
+    .tlm-product-more__grid,
+    .tlm-recently-viewed,
+    .tlm-review-strip {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-product__timeline,
+    .tlm-product-more__grid,
+    .tlm-recently-viewed,
+    .tlm-review-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .tlm-product__floating {
+      border-radius: 14px;
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .tlm-product__floating .tlm-btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-product">
+  <div class="tlm-product__grid tlm-container">
+    <div class="tlm-product__media">
+      {% if product.images.size > 1 %}
+        <div class="tlm-product__thumbs" aria-label="Product thumbnails">
+          {% for image in product.images %}
+            <a class="tlm-product__thumb" href="#product-image-{{ section.id }}-{{ forloop.index }}">
+              {% render 'image', image: image, width: 120, height: 150, crop: 'center' %}
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <div class="tlm-product__gallery">
+        {% if product.images.size == 0 %}
+          <div class="tlm-product__image"></div>
+        {% else %}
+          {% for image in product.images %}
+            <button
+              class="tlm-product__image"
+              id="product-image-{{ section.id }}-{{ forloop.index }}"
+              type="button"
+              data-reveal
+              data-zoom-image="{{ image | image_url: width: 2200 }}"
+              data-zoom-alt="{{ image.alt | default: product.title | escape }}"
+            >
+              {% render 'image', image: image, width: 1400, height: 1700, crop: 'center' %}
+            </button>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="tlm-product__content">
+      {% if section.settings.show_vendor %}
+        <p class="tlm-eyebrow">{{ product.vendor }}</p>
+      {% endif %}
+      <h1 class="tlm-title">{{ product.title }}</h1>
+      <p class="tlm-product__price" data-product-price="{{ section.id }}">{{ product.selected_or_first_available_variant.price | money }}</p>
+      <div class="tlm-product__badges">
+        <span class="tlm-badge">Secure checkout</span>
+        <span class="tlm-badge">Limited batch</span>
+        <span class="tlm-badge">Easy returns</span>
+      </div>
+      {% if section.settings.show_description %}
+        <div class="tlm-product__description">{{ product.description }}</div>
+      {% endif %}
+
+      {% assign product_form_id = 'ProductForm-' | append: section.id %}
+      {% form 'product', product, class: 'tlm-product__form', id: product_form_id, data-product-form: section.id %}
+        {% assign current_variant = product.selected_or_first_available_variant %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <fieldset class="tlm-product__variants">
+          <legend class="tlm-product__legend">Select finish / size</legend>
+          <div class="tlm-product__variant-list">
+            {% for variant in product.variants %}
+              <input
+                class="tlm-product__variant-input"
+                id="variant-{{ section.id }}-{{ variant.id }}"
+                type="radio"
+                name="variant-picker-{{ section.id }}"
+                value="{{ variant.id }}"
+                data-variant-radio
+                data-variant-price="{{ variant.price | money }}"
+                {% if variant == current_variant %}checked{% endif %}
+                {% unless variant.available %}disabled{% endunless %}
+              >
+              <label
+                class="tlm-product__variant-swatch{% if variant == current_variant %} is-active{% endif %}"
+                for="variant-{{ section.id }}-{{ variant.id }}"
+                data-variant-swatch="{{ variant.id }}"
+              >
+                {{ variant.title }}
+                <span>{{ variant.price | money }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+
+        <label for="quantity-{{ section.id }}">Quantity</label>
+        <input id="quantity-{{ section.id }}" type="number" name="quantity" min="1" value="1">
+
+        <button class="tlm-btn" type="submit" data-magnetic>Add to cart</button>
+        {{ form | payment_button }}
+      {% endform %}
+
+      <div class="tlm-product__timeline" data-reveal>
+        <div class="tlm-product__timeline-step">
+          <strong>Today</strong>
+          <span>Order confirmed</span>
+        </div>
+        <div class="tlm-product__timeline-step">
+          <strong>24-48h</strong>
+          <span>Packed with care</span>
+        </div>
+        <div class="tlm-product__timeline-step">
+          <strong>3-6 days</strong>
+          <span>Delivered to you</span>
+        </div>
+      </div>
+
+      <div class="tlm-product__accordions" data-reveal>
+        <details class="tlm-product__accordion" open>
+          <summary>Product details</summary>
+          <div>{{ product.description | strip_html | default: 'Crafted for everyday identity, built with Cloot finishing.' }}</div>
+        </details>
+        <details class="tlm-product__accordion">
+          <summary>Sizing and fit</summary>
+          <div>Choose your usual size for a clean fit. For an oversized streetwear silhouette, size up once where applicable.</div>
+        </details>
+        <details class="tlm-product__accordion">
+          <summary>Shipping and returns</summary>
+          <div>{{ section.settings.shipping_note }}</div>
+        </details>
+      </div>
+
+      {% if section.settings.shipping_note != blank %}
+        <div class="tlm-product__meta">
+          {{ section.settings.shipping_note }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="tlm-product__floating" data-reveal>
+    <div class="tlm-product__floating-title">
+      <strong>{{ product.title }}</strong>
+      <span data-product-price="{{ section.id }}">{{ product.selected_or_first_available_variant.price | money }}</span>
+    </div>
+    <button class="tlm-btn" type="submit" form="{{ product_form_id }}" data-magnetic>Add to cart</button>
+  </div>
+</section>
+
+<div class="tlm-review-strip tlm-container" data-reveal>
+  <div>
+    <p class="tlm-eyebrow">Customer notes</p>
+    <div class="tlm-review-strip__score">4.8</div>
+  </div>
+  <p class="tlm-review-strip__text">Loved for sharp finishing, everyday utility, and designs that feel personal. Built for gifting, collecting, styling, and custom expression.</p>
+</div>
+
+{% assign first_collection = product.collections.first %}
+{% if first_collection != blank %}
+  <section class="tlm-product-more">
+    <div class="tlm-container">
+      <div class="tlm-product-more__header">
+        <div>
+          <p class="tlm-eyebrow">Outfit recommendations</p>
+          <h2 class="tlm-title">Complete the look</h2>
+        </div>
+        <a class="tlm-btn tlm-btn--ghost" href="{{ first_collection.url }}">View all</a>
+      </div>
+      <div class="tlm-product-more__grid">
+        {% for recommendation in first_collection.products limit: 4 %}
+          {% unless recommendation.id == product.id %}
+            {% render 'product-card', product: recommendation, show_quick_add: true %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<section class="tlm-product-more" data-recently-viewed-section>
+  <div class="tlm-container">
+    <div class="tlm-product-more__header">
+      <div>
+        <p class="tlm-eyebrow">Recently viewed</p>
+        <h2 class="tlm-title">Your last edits</h2>
+      </div>
+    </div>
+    <div class="tlm-recently-viewed" data-recently-viewed data-current-url="{{ product.url }}"></div>
+  </div>
+</section>
+
+<script type="application/json" data-current-product>
+  {
+    "title": {{ product.title | json }},
+    "url": {{ product.url | json }},
+    "image": {{ product.featured_image | image_url: width: 600 | json }},
+    "price": {{ product.price | money | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Cloot Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_note",
+      "label": "Shipping note",
+      "default": "Express shipping on all orders. Free returns within 14 days."
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

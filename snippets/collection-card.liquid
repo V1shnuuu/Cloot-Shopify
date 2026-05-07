@@ -1,0 +1,27 @@
+{% doc %}
+  Editorial collection card.
+
+  @param {collection} collection
+{% enddoc %}
+<a class="tlm-collection-card" href="{{ collection.url }}" data-reveal data-tilt>
+  <div class="tlm-collection-card__media">
+    {% if collection.featured_image %}
+      {% render 'image',
+        class: 'tlm-collection-card__image',
+        image: collection.featured_image,
+        width: 900,
+        height: 1100,
+        crop: 'center'
+      %}
+    {% else %}
+      <div class="tlm-editorial__placeholder"></div>
+    {% endif %}
+    <span class="tlm-collection-card__badge">{{ collection.products_count }} pieces</span>
+  </div>
+  <div class="tlm-collection-card__content">
+    <p class="tlm-collection-card__title">{{ collection.title }}</p>
+    {% if collection.description != blank %}
+      <p class="tlm-collection-card__excerpt">{{ collection.description | strip_html | truncatewords: 18 }}</p>
+    {% endif %}
+  </div>
+</a>

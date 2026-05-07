@@ -1,0 +1,240 @@
+{% stylesheet %}
+  .tlm-collection {
+    padding: 80px 0 120px;
+  }
+
+  .tlm-collection__header {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .tlm-collection__hero {
+    position: relative;
+    min-height: 42vh;
+    display: grid;
+    align-items: end;
+    margin-bottom: 42px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(242, 241, 237, 0.08);
+  }
+
+  .tlm-collection__hero-media {
+    position: absolute;
+    inset: 0;
+    opacity: 0.48;
+  }
+
+  .tlm-collection__hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.86) contrast(1.08);
+  }
+
+  .tlm-collection__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0.15), var(--tlm-bg));
+  }
+
+  .tlm-collection__hero .tlm-collection__header {
+    position: relative;
+    z-index: 1;
+    padding: 140px 0 52px;
+    margin-bottom: 0;
+  }
+
+  .tlm-collection__description {
+    color: var(--tlm-muted);
+    max-width: 620px;
+    line-height: 1.7;
+  }
+
+  .tlm-collection__products {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+    gap: var(--gap, 28px);
+  }
+
+  .tlm-collection__toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .tlm-collection__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tlm-collection__filter,
+  .tlm-collection__sort select {
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--tlm-fg);
+    padding: 10px 13px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .tlm-collection__filter.is-active {
+    border-color: rgba(214, 201, 170, 0.55);
+    background: rgba(214, 201, 170, 0.08);
+  }
+
+  .tlm-collection__sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tlm-collection__pagination {
+    margin-top: 40px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-collection {
+      padding: 60px 0 90px;
+    }
+
+    .tlm-collection__products {
+      grid-template-columns: repeat(var(--columns-mobile, 1), minmax(0, 1fr));
+    }
+
+    .tlm-collection__toolbar {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .tlm-collection__filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scroll-snap-type: x proximity;
+    }
+
+    .tlm-collection__filter {
+      white-space: nowrap;
+      scroll-snap-align: start;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-collection">
+  <div class="tlm-collection__hero">
+    {% if collection.featured_image %}
+      <div class="tlm-collection__hero-media" data-parallax data-parallax-speed="0.08">
+        {% render 'image', image: collection.featured_image, width: 2000, height: 1000, crop: 'center' %}
+      </div>
+    {% endif %}
+    <div class="tlm-collection__header tlm-container">
+      <p class="tlm-eyebrow" data-reveal>Collection</p>
+      <h1 class="tlm-title" data-reveal>{{ collection.title }}</h1>
+      {% if section.settings.show_description %}
+        {% if collection.description != blank %}
+          <div class="tlm-collection__description" data-reveal>{{ collection.description }}</div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div
+    class="tlm-collection__grid tlm-container"
+    style="--columns: {{ section.settings.columns }}; --columns-mobile: {{ section.settings.columns_mobile }}; --gap: {{ section.settings.grid_gap }}px;"
+  >
+    {% paginate collection.products by section.settings.products_per_page %}
+      <div class="tlm-collection__toolbar" data-reveal>
+        <div class="tlm-collection__filters" aria-label="Collection filters">
+          <a class="tlm-collection__filter{% if current_tags == blank %} is-active{% endif %}" href="{{ collection.url }}">All</a>
+          {% for tag in collection.all_tags limit: 10 %}
+            <a class="tlm-collection__filter{% if current_tags contains tag %} is-active{% endif %}" href="{{ collection.url }}/{{ tag | handleize }}">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        <form class="tlm-collection__sort" method="get">
+          <label class="tlm-cart__label" for="SortBy-{{ section.id }}">Sort</label>
+          <select id="SortBy-{{ section.id }}" name="sort_by" onchange="this.form.submit()">
+            {% for option in collection.sort_options %}
+              <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+      <div class="tlm-collection__products">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product, show_quick_add: section.settings.enable_quick_add %}
+        {% endfor %}
+      </div>
+      <div class="tlm-collection__pagination">
+        {{ paginate | default_pagination }}
+      </div>
+    {% endpaginate %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cloot Collection",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Desktop columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "label": "Enable quick add",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,129 @@
+{% stylesheet %}
+  .tlm-reviews {
+    padding: 80px 0;
+  }
+
+  .tlm-reviews__grid {
+    display: grid;
+    grid-template-columns: 0.75fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .tlm-reviews__summary,
+  .tlm-reviews__form {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-reviews__score {
+    display: block;
+    font-family: var(--tlm-font-display);
+    font-size: clamp(3.2rem, 8vw, 6.8rem);
+    line-height: 0.9;
+    margin: 18px 0;
+  }
+
+  .tlm-reviews__form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .tlm-reviews__form label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-reviews__form input,
+  .tlm-reviews__form select,
+  .tlm-reviews__form textarea {
+    width: 100%;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+    padding: 12px;
+  }
+
+  .tlm-workflow-status {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-reviews__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% assign review_score = product.metafields.reviews.rating.value.rating | default: section.settings.fallback_score %}
+{% assign review_count = product.metafields.reviews.rating_count | default: section.settings.fallback_count %}
+<section class="tlm-reviews">
+  <div class="tlm-container tlm-reviews__grid">
+    <div class="tlm-reviews__summary" data-reveal>
+      <p class="tlm-eyebrow">{{ section.settings.eyebrow }}</p>
+      <strong class="tlm-reviews__score">{{ review_score }}</strong>
+      <p>{{ review_count }} moderated reviews. Every submission enters the moderation queue before publication.</p>
+    </div>
+
+    <form class="tlm-reviews__form" data-review-form>
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input type="hidden" name="product_title" value="{{ product.title | escape }}">
+      <div>
+        <label for="review-rating-{{ section.id }}">Rating</label>
+        <select id="review-rating-{{ section.id }}" name="rating" required>
+          <option value="5">5 stars</option>
+          <option value="4">4 stars</option>
+          <option value="3">3 stars</option>
+          <option value="2">2 stars</option>
+          <option value="1">1 star</option>
+        </select>
+      </div>
+      <div>
+        <label for="review-title-{{ section.id }}">Title</label>
+        <input id="review-title-{{ section.id }}" name="title" type="text" autocomplete="off">
+      </div>
+      <div>
+        <label for="review-body-{{ section.id }}">Review</label>
+        <textarea id="review-body-{{ section.id }}" name="body" rows="5" required></textarea>
+      </div>
+      <button class="tlm-btn" type="submit">Submit review</button>
+      <p class="tlm-workflow-status" data-workflow-status aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Review system",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Reviews and moderation"
+    },
+    {
+      "type": "text",
+      "id": "fallback_score",
+      "label": "Fallback score",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "fallback_count",
+      "label": "Fallback count",
+      "default": "128"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Review system"
+    }
+  ]
+}
+{% endschema %}

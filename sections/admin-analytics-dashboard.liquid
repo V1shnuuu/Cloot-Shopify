@@ -1,0 +1,166 @@
+{% stylesheet %}
+  .tlm-admin {
+    padding: 90px 0;
+  }
+
+  .tlm-admin__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .tlm-admin__panel,
+  .tlm-admin__queue {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-admin__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .tlm-admin__queue {
+    display: grid;
+    gap: 14px;
+  }
+
+  .tlm-admin__queue-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgba(242, 241, 237, 0.08);
+    padding-bottom: 12px;
+  }
+
+  .tlm-admin__queue-row span {
+    color: var(--tlm-muted);
+  }
+
+  @media screen and (max-width: 849px) {
+    .tlm-admin__grid,
+    .tlm-admin__kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-admin" data-admin-analytics>
+  <div class="tlm-container tlm-admin__grid">
+    <div class="tlm-admin__panel" data-reveal>
+      <p class="tlm-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1 class="tlm-title">{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.description }}</p>
+      <div class="tlm-admin__kpis">
+        {% render 'commerce-kpi-card', label: 'Revenue signal', value: section.settings.revenue_signal, detail: 'Analytics engine' %}
+        {% render 'commerce-kpi-card', label: 'Conversion', value: section.settings.conversion_signal, detail: 'Checkout flow' %}
+        {% render 'commerce-kpi-card', label: 'Returns', value: section.settings.returns_signal, detail: 'Refund workflow' %}
+        {% render 'commerce-kpi-card', label: 'Risk queue', value: section.settings.risk_signal, detail: 'Fraud detection' %}
+      </div>
+    </div>
+
+    <div class="tlm-admin__queue" data-reveal>
+      <p class="tlm-eyebrow">Operational queue</p>
+      <div class="tlm-admin__queue-row">
+        <strong>Review moderation</strong>
+        <span>{{ section.settings.review_queue }}</span>
+      </div>
+      <div class="tlm-admin__queue-row">
+        <strong>Inventory reservations</strong>
+        <span>{{ section.settings.inventory_queue }}</span>
+      </div>
+      <div class="tlm-admin__queue-row">
+        <strong>Support cases</strong>
+        <span>{{ section.settings.support_queue }}</span>
+      </div>
+      <div class="tlm-admin__queue-row">
+        <strong>Notification outbox</strong>
+        <span>{{ section.settings.notification_queue }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Admin analytics dashboard",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Admin dashboard"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Commerce operations"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "A storefront-safe analytics surface for app-proxy data. The full admin system belongs in the Shopify app dashboard and Admin API layer."
+    },
+    {
+      "type": "text",
+      "id": "revenue_signal",
+      "label": "Revenue signal",
+      "default": "Live"
+    },
+    {
+      "type": "text",
+      "id": "conversion_signal",
+      "label": "Conversion signal",
+      "default": "Tracked"
+    },
+    {
+      "type": "text",
+      "id": "returns_signal",
+      "label": "Returns signal",
+      "default": "Normal"
+    },
+    {
+      "type": "text",
+      "id": "risk_signal",
+      "label": "Risk signal",
+      "default": "Review"
+    },
+    {
+      "type": "text",
+      "id": "review_queue",
+      "label": "Review queue",
+      "default": "Moderation ready"
+    },
+    {
+      "type": "text",
+      "id": "inventory_queue",
+      "label": "Inventory queue",
+      "default": "Reservations synced"
+    },
+    {
+      "type": "text",
+      "id": "support_queue",
+      "label": "Support queue",
+      "default": "Open"
+    },
+    {
+      "type": "text",
+      "id": "notification_queue",
+      "label": "Notification queue",
+      "default": "Queued"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Admin analytics dashboard"
+    }
+  ]
+}
+{% endschema %}

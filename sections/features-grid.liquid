@@ -1,0 +1,149 @@
+{% stylesheet %}
+  .features-grid-premium {
+    position: relative;
+    padding: clamp(56px, 8vw, 110px) 0;
+  }
+
+  .features-grid-premium__header {
+    max-width: 760px;
+    margin-bottom: clamp(26px, 4vw, 44px);
+  }
+
+  .features-grid-premium__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2rem, 4.2vw, 3.6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .features-grid-premium__description {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+    margin-top: 12px;
+  }
+
+  .features-grid-premium__grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(var(--feature-columns, 3), minmax(0, 1fr));
+  }
+
+  .features-grid-premium__item {
+    border-radius: 18px;
+    border: 1px solid rgba(242, 241, 237, 0.12);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+    backdrop-filter: blur(12px);
+    padding: 24px;
+    display: grid;
+    gap: 12px;
+    min-height: 180px;
+    transition: transform 280ms var(--tlm-ease), border-color 280ms var(--tlm-ease), box-shadow 280ms var(--tlm-ease);
+  }
+
+  .features-grid-premium__item:hover {
+    transform: translateY(-4px);
+    border-color: rgba(214, 201, 170, 0.38);
+    box-shadow: 0 20px 52px rgba(0, 0, 0, 0.38);
+  }
+
+  .features-grid-premium__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid rgba(242, 241, 237, 0.16);
+    display: inline-grid;
+    place-items: center;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .features-grid-premium__item h3 {
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .features-grid-premium__item p {
+    color: var(--tlm-muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  @media screen and (max-width: 989px) {
+    .features-grid-premium__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .features-grid-premium__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="features-grid-premium">
+  <div class="tlm-container">
+    <div class="features-grid-premium__header" data-reveal>
+      {% if section.settings.title != blank %}
+        <h2 class="features-grid-premium__title">{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="features-grid-premium__description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="features-grid-premium__grid" style="--feature-columns: {{ section.settings.columns }};">
+      {% for block in section.blocks %}
+        <article class="features-grid-premium__item" data-reveal {{ block.shopify_attributes }}>
+          <span class="features-grid-premium__icon">{{ block.settings.icon }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.description }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Features grid",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Built for modern luxury commerce" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Craft, speed, and elevated product storytelling across every touchpoint." },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Desktop columns",
+      "default": "3",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon", "default": "✦" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Premium fabrication" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Curated silhouettes with elevated construction and flawless finish." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Features grid",
+      "blocks": [
+        { "type": "feature" },
+        { "type": "feature" },
+        { "type": "feature" }
+      ]
+    }
+  ]
+}
+{% endschema %}

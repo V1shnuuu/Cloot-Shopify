@@ -1,0 +1,114 @@
+{% stylesheet %}
+  .tlm-collections {
+    padding: 80px 0 120px;
+  }
+
+  .tlm-collections__header {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .tlm-collections__intro {
+    color: var(--tlm-muted);
+    max-width: 620px;
+    line-height: 1.7;
+  }
+
+  .tlm-collections__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+    gap: var(--gap, 28px);
+  }
+
+  .tlm-collections__grid .tlm-collection-card:nth-child(3n + 2) {
+    margin-top: 42px;
+  }
+
+  .tlm-collections__grid .tlm-collection-card:nth-child(4n) {
+    margin-top: -18px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-collections {
+      padding: 60px 0 90px;
+    }
+
+    .tlm-collections__grid {
+      grid-template-columns: repeat(var(--columns-mobile, 1), minmax(0, 1fr));
+    }
+
+    .tlm-collections__grid .tlm-collection-card:nth-child(n) {
+      margin-top: 0;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-collections">
+  <div class="tlm-collections__header tlm-container">
+    <p class="tlm-eyebrow" data-reveal>Collections</p>
+    <h1 class="tlm-title" data-reveal>{{ 'collections.title' | t }}</h1>
+    <p class="tlm-collections__intro" data-reveal>{{ section.settings.intro_text }}</p>
+  </div>
+
+  <div
+    class="tlm-collections__grid tlm-container"
+    style="--columns: {{ section.settings.columns }}; --columns-mobile: {{ section.settings.columns_mobile }}; --gap: {{ section.settings.grid_gap }}px;"
+  >
+    {% for collection in collections %}
+      {% unless collection.handle == 'frontpage' %}
+        {% render 'collection-card', collection: collection %}
+      {% endunless %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cloot Collections",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "Browse the visual language of Cloot: sculptural logos, utility objects, clothing drops, and custom statements."
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Desktop columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cloot Collections"
+    }
+  ]
+}
+{% endschema %}

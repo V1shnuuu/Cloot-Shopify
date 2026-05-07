@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "cart-main": {
+      "type": "cart",
+      "settings": {
+        "show_cart_note": true,
+        "show_shipping_calculator": true,
+        "enable_gift_wrapping": true
+      }
+    },
+    "recommendations": {
+      "type": "recommendations-carousel",
+      "settings": {
+        "title": "Complete your purchase",
+        "product_count": 6,
+        "show_view_all": true
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "title": "Shopping FAQ",
+        "description": "Find answers to common questions"
+      }
+    }
+  },
+  "order": [
+    "cart-main",
+    "recommendations",
+    "faq"
+  ]
+}

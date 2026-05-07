@@ -1,0 +1,38 @@
+{
+  "sections": {
+    "collection-header": {
+      "type": "hero-premium",
+      "settings": {
+        "title": "Featured Collection",
+        "subtitle": "Discover our curated selection",
+        "alignment": "center"
+      }
+    },
+    "products": {
+      "type": "products-grid",
+      "settings": {
+        "show_sort": true,
+        "products_per_page": 12,
+        "columns": "3",
+        "show_quick_add": true,
+        "show_view_all": true
+      }
+    },
+    "cta": {
+      "type": "cta-premium",
+      "settings": {
+        "title": "Ready to explore more?",
+        "description": "Discover our complete collection of premium products",
+        "primary_cta_text": "View All Products",
+        "primary_cta_url": "/collections/all",
+        "layout": "centered",
+        "tag": "Collection spotlight"
+      }
+    }
+  },
+  "order": [
+    "collection-header",
+    "products",
+    "cta"
+  ]
+}

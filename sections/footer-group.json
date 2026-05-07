@@ -1,0 +1,20 @@
+/*
+ * PREMIUM FOOTER CONFIGURATION
+ * Uses footer-premium.liquid for enhanced e-commerce footer
+ */
+{
+  "type": "footer",
+  "name": "Premium Footer",
+  "sections": {
+    "premium-footer": {
+      "type": "footer-premium",
+      "settings": {
+        "title": "About Us",
+        "description": "Premium e-commerce platform built for modern brands"
+      }
+    }
+  },
+  "order": [
+    "premium-footer"
+  ]
+}

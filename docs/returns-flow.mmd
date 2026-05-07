@@ -1,0 +1,44 @@
+flowchart TD
+  Customer["Customer"]
+  Portal["Return Request Portal"]
+  Auth["Authentication or Order Lookup"]
+  Eligibility["Return Eligibility Check"]
+  Policy{"Within Policy"}
+  Support["Customer Support Review"]
+  RMA["Return Authorization"]
+  Label["Return Shipping Label"]
+  InTransit["Return In Transit"]
+  Warehouse["Warehouse Receives Item"]
+  Inspection["Item Inspection"]
+  RestockDecision{"Restockable"}
+  Restock["Return to Inventory"]
+  Dispose["Repair Dispose or Exception Queue"]
+  Refund["Refund or Store Credit"]
+  PaymentGateway["Payment Gateway Refund"]
+  OrderUpdate["Order and Return Record Update"]
+  Notifications["Notification System"]
+  Analytics["Returns Analytics"]
+  ReviewSignal["Review and Moderation Signal"]
+
+  Customer --> Portal
+  Portal --> Auth
+  Auth --> Eligibility
+  Eligibility --> Policy
+  Policy -->|No| Support
+  Support --> RMA
+  Policy -->|Yes| RMA
+  RMA --> Label
+  Label --> InTransit
+  InTransit --> Warehouse
+  Warehouse --> Inspection
+  Inspection --> RestockDecision
+  RestockDecision -->|Yes| Restock
+  RestockDecision -->|No| Dispose
+  Inspection --> Refund
+  Refund --> PaymentGateway
+  PaymentGateway --> OrderUpdate
+  Restock --> OrderUpdate
+  Dispose --> OrderUpdate
+  OrderUpdate --> Notifications
+  OrderUpdate --> Analytics
+  Support --> ReviewSignal

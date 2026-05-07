@@ -1,0 +1,46 @@
+flowchart LR
+  AdminUser["Merchant or Admin User"]
+  ShopifyAdmin["Shopify Admin Dashboard"]
+  ThemeEditor["Theme Editor"]
+  ProductAdmin["Product and Collection Admin"]
+  OrderAdmin["Order Admin"]
+  InventoryAdmin["Inventory Admin"]
+  ContentAdmin["Pages Blogs and Navigation"]
+  Metafields["Metafields and Metaobjects"]
+  Apps["Installed Apps"]
+  ReviewsModeration["Reviews Moderation"]
+  SupportDesk["Customer Support"]
+  Analytics["Analytics and Reports"]
+  Theme["Shopify Theme Files"]
+  Storefront["Live Storefront"]
+  AdminApi["Admin API"]
+  Webhooks["Webhooks"]
+  EventQueue["Event Queue or Message Broker"]
+
+  AdminUser --> ShopifyAdmin
+  ShopifyAdmin --> ThemeEditor
+  ShopifyAdmin --> ProductAdmin
+  ShopifyAdmin --> OrderAdmin
+  ShopifyAdmin --> InventoryAdmin
+  ShopifyAdmin --> ContentAdmin
+  ShopifyAdmin --> Metafields
+  ShopifyAdmin --> Apps
+  ShopifyAdmin --> Analytics
+  ThemeEditor --> Theme
+  Theme --> Storefront
+  ProductAdmin --> Storefront
+  ContentAdmin --> Storefront
+  Metafields --> Storefront
+  Apps --> ReviewsModeration
+  Apps --> SupportDesk
+  Apps --> AdminApi
+  AdminApi --> ProductAdmin
+  AdminApi --> OrderAdmin
+  AdminApi --> InventoryAdmin
+  OrderAdmin --> Webhooks
+  InventoryAdmin --> Webhooks
+  ProductAdmin --> Webhooks
+  Webhooks --> EventQueue
+  EventQueue --> Analytics
+  SupportDesk --> OrderAdmin
+  ReviewsModeration --> Storefront

@@ -1,0 +1,54 @@
+{% doc %}
+  Animated cart drawer for Cloot.
+{% enddoc %}
+<aside class="tlm-cart" data-cart-drawer aria-hidden="true" role="dialog">
+  <div class="tlm-cart__backdrop" data-cart-close></div>
+  <div class="tlm-cart__panel" data-swipe-close>
+    <div class="tlm-cart__header">
+      <p class="tlm-eyebrow">Cart</p>
+      <button class="tlm-icon-btn" type="button" data-cart-close aria-label="Close cart">
+        {% render 'icon-close' %}
+      </button>
+    </div>
+    {% if cart.item_count == 0 %}
+      <p class="tlm-cart__empty">Your cart is empty.</p>
+      <a class="tlm-btn" href="{{ routes.all_products_collection_url }}">Continue shopping</a>
+    {% else %}
+      <div class="tlm-cart__progress" aria-hidden="true">
+        <span style="--cart-progress: {% if cart.total_price >= 100000 %}100{% else %}{{ cart.total_price | times: 100 | divided_by: 100000 }}{% endif %}%;"></span>
+      </div>
+      <p class="tlm-cart__delivery">Free shipping unlocks above ₹1000</p>
+      <form action="{{ routes.cart_url }}" method="post" class="tlm-cart__form">
+        <div class="tlm-cart__items">
+          {% for item in cart.items %}
+            <div class="tlm-cart__item">
+              <div class="tlm-cart__media">
+                {% render 'image', image: item.image, url: item.url, width: 160, height: 200, crop: 'center' %}
+              </div>
+              <div class="tlm-cart__details">
+                <p class="tlm-cart__title">{{ item.product.title }}</p>
+                <p class="tlm-cart__variant">{{ item.variant.title }}</p>
+                <p class="tlm-cart__price">{{ item.final_line_price | money }}</p>
+                <div class="tlm-cart__qty">
+                  <label class="tlm-cart__label" for="update-{{ item.key }}">Qty</label>
+                  <input id="update-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                  <a href="{{ item.url_to_remove }}" class="tlm-cart__remove">Remove</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="tlm-cart__summary">
+          <div class="tlm-cart__row">
+            <span>Subtotal</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          <div class="tlm-cart__actions">
+            <button class="tlm-btn" type="submit" name="checkout">Checkout</button>
+            <button class="tlm-btn tlm-btn--ghost" type="submit">Update cart</button>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</aside>

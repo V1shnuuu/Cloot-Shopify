@@ -1,0 +1,144 @@
+{% stylesheet %}
+  .tlm-tracking {
+    padding: 90px 0;
+  }
+
+  .tlm-tracking__panel {
+    display: grid;
+    gap: 24px;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 28px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-tracking__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  .tlm-tracking__form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .tlm-tracking__form input {
+    width: 100%;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+    padding: 12px;
+  }
+
+  .tlm-status-timeline {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tlm-status-timeline li {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--tlm-muted);
+  }
+
+  .tlm-status-timeline li.is-active {
+    border-color: rgba(214, 201, 170, 0.55);
+    color: var(--tlm-fg);
+    background: rgba(214, 201, 170, 0.07);
+  }
+
+  .tlm-status-timeline strong,
+  .tlm-status-timeline span {
+    display: block;
+  }
+
+  .tlm-status-timeline strong {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .tlm-status-timeline span {
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .tlm-tracking__form,
+    .tlm-status-timeline {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-tracking">
+  <div class="tlm-container">
+    <div class="tlm-tracking__panel" data-reveal>
+      <div>
+        <p class="tlm-eyebrow">{{ section.settings.eyebrow }}</p>
+        <h1 class="tlm-title">{{ section.settings.heading }}</h1>
+      </div>
+      <form class="tlm-tracking__form" data-tracking-form>
+        <div>
+          <label for="tracking-order-{{ section.id }}">Order number</label>
+          <input id="tracking-order-{{ section.id }}" name="order_name" type="text" placeholder="#1001" required>
+        </div>
+        <div>
+          <label for="tracking-email-{{ section.id }}">Email</label>
+          <input id="tracking-email-{{ section.id }}" name="email" type="email" autocomplete="email" required>
+        </div>
+        <button class="tlm-btn" type="submit">Track</button>
+        <p class="tlm-workflow-status" data-workflow-status aria-live="polite"></p>
+      </form>
+      {% render 'commerce-status-timeline', current_step: section.settings.current_step %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Order tracking",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shipping and tracking"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Track your order"
+    },
+    {
+      "type": "select",
+      "id": "current_step",
+      "label": "Demo current step",
+      "options": [
+        { "value": "order", "label": "Order" },
+        { "value": "reserved", "label": "Inventory reserved" },
+        { "value": "warehouse", "label": "Warehouse" },
+        { "value": "shipped", "label": "Shipped" },
+        { "value": "delivered", "label": "Delivered" }
+      ],
+      "default": "warehouse"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Order tracking"
+    }
+  ]
+}
+{% endschema %}

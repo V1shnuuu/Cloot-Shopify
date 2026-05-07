@@ -1,0 +1,153 @@
+{% stylesheet %}
+  .products-grid-premium {
+    padding: clamp(56px, 8vw, 108px) 0;
+  }
+
+  .products-grid-premium__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .products-grid-premium__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2rem, 4.4vw, 3.8rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .products-grid-premium__controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .products-grid-premium__controls select,
+  .products-grid-premium__controls .tlm-btn {
+    min-height: 40px;
+  }
+
+  .products-grid-premium__controls select {
+    padding: 0 14px;
+    border: 1px solid rgba(242, 241, 237, 0.2);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--tlm-fg);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .products-grid-premium__grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(var(--product-columns, 4), minmax(0, 1fr));
+  }
+
+  .products-grid-premium__empty {
+    border-radius: 16px;
+    border: 1px dashed rgba(242, 241, 237, 0.2);
+    padding: 24px;
+    color: var(--tlm-muted);
+  }
+
+  @media screen and (max-width: 1199px) {
+    .products-grid-premium__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .products-grid-premium__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .products-grid-premium__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign source_collection = collection
+  if source_collection == blank and section.settings.collection != blank
+    assign source_collection = section.settings.collection
+  endif
+  if source_collection == blank
+    assign source_collection = collections.all
+  endif
+  assign products_limit = section.settings.products_per_page
+%}
+
+<section class="products-grid-premium" id="featured">
+  <div class="tlm-container">
+    <header class="products-grid-premium__header">
+      {% if section.settings.title != blank %}
+        <h2 class="products-grid-premium__title" data-reveal>{{ section.settings.title }}</h2>
+      {% endif %}
+      <div class="products-grid-premium__controls" data-reveal>
+        {% if section.settings.show_sort and collection %}
+          <form method="get" action="{{ collection.url }}">
+            <select name="sort_by" onchange="this.form.submit()" aria-label="Sort products">
+              <option value="manual" {% if collection.sort_by == blank or collection.sort_by == 'manual' %}selected{% endif %}>Featured</option>
+              <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
+              <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price low to high</option>
+              <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price high to low</option>
+              <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+            </select>
+          </form>
+        {% endif %}
+        {% if section.settings.show_view_all and source_collection != blank %}
+          <a class="tlm-btn tlm-btn--ghost" href="{{ source_collection.url }}" data-magnetic>View all</a>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if source_collection != blank and source_collection.products_count > 0 %}
+      <div class="products-grid-premium__grid" style="--product-columns: {{ section.settings.columns }};">
+        {% for product in source_collection.products limit: products_limit %}
+          {% render 'product-card', product: product, show_quick_add: section.settings.show_quick_add %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="products-grid-premium__empty">No products are available yet. Add products to a collection and assign that collection to this section.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Products grid",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Trending now" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Desktop columns",
+      "default": "4",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ]
+    },
+    { "type": "range", "id": "products_per_page", "label": "Products to show", "min": 4, "max": 16, "step": 1, "default": 8 },
+    { "type": "checkbox", "id": "show_quick_add", "label": "Show quick add", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sort dropdown on collection pages", "default": true },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show view all button", "default": true }
+  ],
+  "presets": [
+    {
+      "name": "Products grid"
+    }
+  ]
+}
+{% endschema %}

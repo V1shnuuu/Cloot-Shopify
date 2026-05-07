@@ -1,0 +1,141 @@
+{% doc %}
+  Renders a premium drawer component (sidebar) with smooth slide animation.
+  Used for cart, navigation menu, filters, and mobile menus.
+  
+  @param {string} [title] - Drawer title
+  @param {string} [position] - Position: 'left' (default), 'right'
+  @param {string} [id] - Unique drawer identifier
+  @param {string} [class] - Additional CSS classes
+{% enddoc %}
+
+{% stylesheet %}
+  .drawer {
+    position: fixed;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--color-white);
+    z-index: var(--z-modal);
+    box-shadow: var(--shadow-2xl);
+    transition: transform var(--transition-normal) ease-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer.left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .drawer.right {
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  .drawer.active {
+    transform: translateX(0);
+  }
+
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: calc(var(--z-modal) - 1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal) ease-out;
+  }
+
+  .drawer.active ~ .drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-6);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .drawer-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+  }
+
+  .drawer-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--color-gray-100);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast) ease-out;
+    color: var(--color-gray-700);
+  }
+
+  .drawer-close:hover {
+    background: var(--color-gray-200);
+  }
+
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-6);
+  }
+
+  .drawer-footer {
+    padding: var(--space-6);
+    border-top: 1px solid var(--color-gray-200);
+    background: var(--color-gray-50);
+  }
+
+  @media (max-width: 768px) {
+    .drawer {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+<aside id="{{ id }}" class="drawer {{ position | default: 'right' }} {{ class }}">
+  <div class="drawer-header">
+    <h2 class="drawer-title">{{ title }}</h2>
+    <button class="drawer-close" data-close-drawer aria-label="Close drawer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <!-- Drawer content will be inserted here -->
+  </div>
+  <div class="drawer-footer">
+    <!-- Optional footer content -->
+  </div>
+</aside>
+
+<div class="drawer-backdrop" data-close-drawer></div>
+
+{% javascript %}
+  const drawer = document.getElementById('{{ id }}');
+  document.querySelectorAll('[data-close-drawer]').forEach(el => {
+    el.addEventListener('click', function() {
+      drawer.classList.remove('active');
+    });
+  });
+
+  window.openDrawer = function(id) {
+    document.getElementById(id).classList.add('active');
+  };
+
+  window.closeDrawer = function(id) {
+    document.getElementById(id).classList.remove('active');
+  };
+{% endjavascript %}

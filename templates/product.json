@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "product-main": {
+      "type": "product",
+      "settings": {
+        "enable_sticky_info": true,
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "gallery_layout": "thumbnail",
+        "mobile_thumbnails": "show",
+        "hide_variants": false,
+        "enable_video_looping": true
+      }
+    },
+    "product-reviews": {
+      "type": "review-system",
+      "settings": {
+        "show_rating": true,
+        "show_count": true,
+        "allow_reviews": true
+      }
+    },
+    "related-products": {
+      "type": "recommendations-carousel",
+      "settings": {
+        "title": "You might also like",
+        "product_count": 8,
+        "show_view_all": true
+      }
+    }
+  },
+  "order": [
+    "product-main",
+    "product-reviews",
+    "related-products"
+  ]
+}

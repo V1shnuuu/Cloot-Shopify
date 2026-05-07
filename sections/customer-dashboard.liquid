@@ -1,0 +1,123 @@
+{% stylesheet %}
+  .tlm-dashboard {
+    padding: 90px 0;
+  }
+
+  .tlm-dashboard__grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr;
+    gap: 28px;
+  }
+
+  .tlm-dashboard__panel,
+  .tlm-kpi-card {
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    border-radius: 8px;
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .tlm-dashboard__kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .tlm-kpi-card p,
+  .tlm-kpi-card span {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-kpi-card strong {
+    display: block;
+    margin: 8px 0;
+    font-family: var(--tlm-font-display);
+    font-size: 2.2rem;
+  }
+
+  .tlm-dashboard__orders {
+    display: grid;
+    gap: 12px;
+  }
+
+  .tlm-dashboard__order {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgba(242, 241, 237, 0.08);
+    padding-bottom: 12px;
+  }
+
+  @media screen and (max-width: 849px) {
+    .tlm-dashboard__grid,
+    .tlm-dashboard__kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-dashboard">
+  <div class="tlm-container tlm-dashboard__grid">
+    <div class="tlm-dashboard__panel" data-reveal>
+      <p class="tlm-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% if customer %}
+        <h1 class="tlm-title">Welcome back, {{ customer.first_name | default: customer.email }}</h1>
+        <div class="tlm-dashboard__kpis">
+          {% render 'commerce-kpi-card', label: 'Orders', value: customer.orders_count, detail: 'Lifetime orders' %}
+          {% render 'commerce-kpi-card', label: 'Account', value: customer.state, detail: 'Authentication state' %}
+          {% render 'commerce-kpi-card', label: 'Wishlist', value: 'Synced', detail: 'Stored through app proxy or local device' %}
+        </div>
+      {% else %}
+        <h1 class="tlm-title">{{ section.settings.heading }}</h1>
+        <p>Sign in to see orders, wishlist state, return requests, recommendations, and support updates.</p>
+        <a class="tlm-btn" href="{{ routes.account_login_url }}">Sign in</a>
+      {% endif %}
+    </div>
+
+    <div class="tlm-dashboard__panel" data-reveal>
+      <p class="tlm-eyebrow">Orders and support</p>
+      <div class="tlm-dashboard__orders">
+        {% if customer.orders.size > 0 %}
+          {% for order in customer.orders limit: 5 %}
+            <article class="tlm-dashboard__order">
+              <div>
+                <strong>{{ order.name }}</strong>
+                <p>{{ order.created_at | date: '%b %d, %Y' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+              </div>
+              <a class="tlm-btn tlm-btn--ghost" href="{{ order.customer_url }}">View</a>
+            </article>
+          {% endfor %}
+        {% else %}
+          <p>No orders are available for this account yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer dashboard",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Authentication service"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Signed out heading",
+      "default": "Your commerce workspace"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer dashboard"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,72 @@
+erDiagram
+  SHOP ||--o{ PRODUCT : owns
+  SHOP ||--o{ COLLECTION : owns
+  SHOP ||--o{ CUSTOMER : owns
+  SHOP ||--o{ ORDER : owns
+  SHOP ||--o{ PAGE : owns
+  SHOP ||--o{ ARTICLE : owns
+  SHOP ||--o{ METAOBJECT : owns
+  SHOP ||--o{ THEME_SETTING : configures
+  PRODUCT ||--o{ VARIANT : has
+  PRODUCT }o--o{ COLLECTION : appears_in
+  PRODUCT ||--o{ MEDIA : has
+  PRODUCT ||--o{ METAFIELD : describes
+  VARIANT ||--o{ METAFIELD : describes
+  COLLECTION ||--o{ METAFIELD : describes
+  CUSTOMER ||--o{ METAFIELD : describes
+  CUSTOMER ||--o{ ORDER : places
+  ORDER ||--o{ ORDER_LINE_ITEM : contains
+  VARIANT ||--o{ ORDER_LINE_ITEM : purchased_as
+  CART ||--o{ CART_LINE_ITEM : contains
+  VARIANT ||--o{ CART_LINE_ITEM : selected_as
+  PAGE ||--o{ METAFIELD : describes
+  ARTICLE ||--o{ METAFIELD : describes
+  METAOBJECT ||--o{ METAFIELD : contains
+  APP_INTEGRATION ||--o{ METAFIELD : may_manage
+  APP_INTEGRATION ||--o{ WEBHOOK_SUBSCRIPTION : registers
+
+  SHOP {
+    string id
+    string name
+    string primary_domain
+  }
+  PRODUCT {
+    string id
+    string handle
+    string title
+    string status
+  }
+  VARIANT {
+    string id
+    string sku
+    string title
+    int inventory_quantity
+    decimal price
+  }
+  COLLECTION {
+    string id
+    string handle
+    string title
+  }
+  CUSTOMER {
+    string id
+    string email
+    string account_state
+  }
+  ORDER {
+    string id
+    string name
+    string financial_status
+    string fulfillment_status
+  }
+  METAFIELD {
+    string namespace
+    string key
+    string type
+    string owner_id
+  }
+  METAOBJECT {
+    string id
+    string type
+    string handle
+  }

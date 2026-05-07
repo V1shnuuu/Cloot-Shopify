@@ -1,0 +1,15 @@
+{% doc %}
+  Renders a compact commerce KPI card.
+
+  @param {string} label
+  @param {string} value
+  @param {string} [detail]
+{% enddoc %}
+
+<article class="tlm-kpi-card">
+  <p>{{ label }}</p>
+  <strong>{{ value }}</strong>
+  {% if detail != blank %}
+    <span>{{ detail }}</span>
+  {% endif %}
+</article>

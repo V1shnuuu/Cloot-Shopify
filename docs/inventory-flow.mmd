@@ -1,0 +1,42 @@
+flowchart TD
+  Catalog["Product Catalog"]
+  Variant["Variant Selected"]
+  Availability["Availability Check"]
+  Cart["Cart Line Added"]
+  Checkout["Checkout Started"]
+  Reserve["Reserve Inventory"]
+  ReservationResult{"Inventory Reserved"}
+  OutOfStock["Out of Stock Messaging"]
+  Order["Order Created"]
+  WarehouseQueue["Warehouse Pick Queue"]
+  PickPack["Pick and Pack"]
+  Label["Shipping Label Created"]
+  Carrier["Carrier Pickup"]
+  Tracking["Tracking Number"]
+  Delivery["Delivery Confirmation"]
+  InventoryDecrement["Committed Inventory Decrement"]
+  Restock["Restock or Return Inventory"]
+  AdminInventory["Admin Inventory Adjustment"]
+  Events["Inventory Events"]
+  Notifications["Customer and Admin Notifications"]
+
+  Catalog --> Variant
+  Variant --> Availability
+  Availability --> Cart
+  Cart --> Checkout
+  Checkout --> Reserve
+  Reserve --> ReservationResult
+  ReservationResult -->|No| OutOfStock
+  ReservationResult -->|Yes| Order
+  Order --> WarehouseQueue
+  WarehouseQueue --> PickPack
+  PickPack --> Label
+  Label --> Carrier
+  Carrier --> Tracking
+  Tracking --> Delivery
+  Order --> InventoryDecrement
+  Delivery --> Events
+  InventoryDecrement --> Events
+  AdminInventory --> Events
+  Restock --> Events
+  Events --> Notifications

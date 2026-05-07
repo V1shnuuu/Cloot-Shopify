@@ -1,0 +1,45 @@
+flowchart TD
+  ProductPage["Product Page"]
+  AddToCart["Add to Cart"]
+  CartDrawer["Cart Drawer or Cart Page"]
+  CartValidation["Cart Validation"]
+  DiscountEngine["Discount Engine"]
+  CheckoutStart["Start Shopify Checkout"]
+  CustomerAuth{"Customer Authenticated"}
+  Login["Customer Login or Guest Continuation"]
+  Address["Shipping Address"]
+  ShippingRates["Shipping Rate Selection"]
+  TaxDuty["Tax and Duty Calculation"]
+  PaymentMethod["Payment Method Selection"]
+  PaymentGateway["Payment Gateway Authorization"]
+  FraudCheck["Fraud Detection"]
+  OrderCreate["Order Creation"]
+  InventoryReserve["Inventory Reservation"]
+  Confirmation["Order Confirmation"]
+  Notify["Notification System"]
+  Analytics["Checkout Analytics"]
+  Failure{"Payment or Fraud Failure"}
+  Recovery["Checkout Recovery or Retry"]
+
+  ProductPage --> AddToCart
+  AddToCart --> CartDrawer
+  CartDrawer --> CartValidation
+  CartValidation --> DiscountEngine
+  DiscountEngine --> CheckoutStart
+  CheckoutStart --> CustomerAuth
+  CustomerAuth -->|Yes| Address
+  CustomerAuth -->|No| Login
+  Login --> Address
+  Address --> ShippingRates
+  ShippingRates --> TaxDuty
+  TaxDuty --> PaymentMethod
+  PaymentMethod --> PaymentGateway
+  PaymentGateway --> FraudCheck
+  FraudCheck --> Failure
+  Failure -->|Rejected| Recovery
+  Recovery --> PaymentMethod
+  Failure -->|Approved| OrderCreate
+  OrderCreate --> InventoryReserve
+  InventoryReserve --> Confirmation
+  Confirmation --> Notify
+  Confirmation --> Analytics

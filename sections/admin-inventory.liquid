@@ -1,0 +1,335 @@
+{% doc %}
+  Renders a premium inventory management section for admins.
+  Features real-time stock levels, SKU tracking, and quick reorder options.
+  
+  @param {array} products - Product inventory data
+{% enddoc %}
+
+{% stylesheet %}
+  .inventory-section {
+    background: var(--color-gray-50);
+    min-height: 100vh;
+    padding: var(--space-12);
+  }
+
+  .inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .inventory-title {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+  }
+
+  .inventory-actions {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .inventory-search {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    width: 300px;
+    font-size: var(--font-size-base);
+  }
+
+  .inventory-table {
+    background: var(--color-white);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: var(--space-8);
+    border-bottom: 1px solid var(--color-gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .table-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+  }
+
+  .table-stats {
+    display: flex;
+    gap: var(--space-8);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: var(--color-gray-50);
+  }
+
+  th {
+    padding: var(--space-4) var(--space-6);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  td {
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-gray-100);
+    font-size: var(--font-size-sm);
+  }
+
+  tbody tr:hover {
+    background: var(--color-gray-50);
+  }
+
+  .product-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .product-image {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-gray-100);
+  }
+
+  .product-info h4 {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--space-1);
+  }
+
+  .product-info p {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+  }
+
+  .stock-level {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .stock-bar {
+    width: 80px;
+    height: 8px;
+    background: var(--color-gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .stock-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary-500), var(--color-success));
+    border-radius: var(--radius-full);
+  }
+
+  .stock-fill.low {
+    background: var(--color-warning);
+  }
+
+  .stock-fill.critical {
+    background: var(--color-error);
+  }
+
+  .stock-value {
+    font-weight: var(--font-weight-semibold);
+    min-width: 50px;
+  }
+
+  .action-menu {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .action-btn {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-gray-300);
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-xs);
+    transition: all var(--transition-fast) ease-out;
+  }
+
+  .action-btn:hover {
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-300);
+    color: var(--color-primary-600);
+  }
+
+  @media (max-width: 1024px) {
+    .inventory-search {
+      width: 200px;
+    }
+
+    .table-stats {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .inventory-header {
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .inventory-actions {
+      flex-direction: column;
+    }
+
+    .inventory-search {
+      width: 100%;
+    }
+
+    table {
+      font-size: var(--font-size-xs);
+    }
+
+    th, td {
+      padding: var(--space-2) var(--space-3);
+    }
+  }
+{% endstylesheet %}
+
+<div class="inventory-section">
+  <div class="inventory-header">
+    <h1 class="inventory-title">Inventory Management 📦</h1>
+    <div class="inventory-actions">
+      <input type="text" class="inventory-search" placeholder="Search products...">
+      <button class="btn btn-md btn-primary">+ Add Stock</button>
+    </div>
+  </div>
+
+  <div class="inventory-table">
+    <div class="table-header">
+      <h2 class="table-title">Product Inventory</h2>
+      <div class="table-stats">
+        <span>📊 Total Products: 248</span>
+        <span>⚠️ Low Stock: 12</span>
+        <span>🔴 Out of Stock: 3</span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>SKU</th>
+          <th>Stock Level</th>
+          <th>Reorder Point</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="product-cell">
+              <div class="product-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect fill='%23e5e7eb' width='50' height='50'/%3E%3C/svg%3E" alt="Product">
+              </div>
+              <div class="product-info">
+                <h4>Premium T-Shirt</h4>
+                <p>Color: Navy | Size: M</p>
+              </div>
+            </div>
+          </td>
+          <td>TSHIRT-001</td>
+          <td>
+            <div class="stock-level">
+              <div class="stock-bar">
+                <div class="stock-fill" style="width: 85%;"></div>
+              </div>
+              <span class="stock-value">245</span>
+            </div>
+          </td>
+          <td>50</td>
+          <td><span class="badge badge-success badge-sm">In Stock</span></td>
+          <td>
+            <div class="action-menu">
+              <button class="action-btn">Edit</button>
+              <button class="action-btn">Adjust</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="product-cell">
+              <div class="product-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect fill='%23e5e7eb' width='50' height='50'/%3E%3C/svg%3E" alt="Product">
+              </div>
+              <div class="product-info">
+                <h4>Classic Denim Jeans</h4>
+                <p>Color: Blue | Size: 32</p>
+              </div>
+            </div>
+          </td>
+          <td>JEANS-002</td>
+          <td>
+            <div class="stock-level">
+              <div class="stock-bar">
+                <div class="stock-fill low" style="width: 30%;"></div>
+              </div>
+              <span class="stock-value">28</span>
+            </div>
+          </td>
+          <td>50</td>
+          <td><span class="badge badge-warning badge-sm">Low Stock</span></td>
+          <td>
+            <div class="action-menu">
+              <button class="action-btn">Edit</button>
+              <button class="action-btn">Reorder</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="product-cell">
+              <div class="product-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect fill='%23e5e7eb' width='50' height='50'/%3E%3C/svg%3E" alt="Product">
+              </div>
+              <div class="product-info">
+                <h4>Leather Sneakers</h4>
+                <p>Color: Black | Size: 10</p>
+              </div>
+            </div>
+          </td>
+          <td>SNEAKER-003</td>
+          <td>
+            <div class="stock-level">
+              <div class="stock-bar">
+                <div class="stock-fill critical" style="width: 5%;"></div>
+              </div>
+              <span class="stock-value">0</span>
+            </div>
+          </td>
+          <td>50</td>
+          <td><span class="badge badge-error badge-sm">Out of Stock</span></td>
+          <td>
+            <div class="action-menu">
+              <button class="action-btn">Edit</button>
+              <button class="action-btn">Reorder</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

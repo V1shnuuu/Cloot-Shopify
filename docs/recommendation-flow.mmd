@@ -1,0 +1,40 @@
+flowchart LR
+  Visitor["Visitor or Customer"]
+  Storefront["Storefront Events"]
+  ProductViews["Product Views"]
+  Searches["Search Queries"]
+  CartEvents["Cart Events"]
+  Orders["Order History"]
+  Analytics["Analytics Engine"]
+  Profile["Customer or Session Profile"]
+  Catalog["Product Catalog"]
+  Metafields["Product Metafields"]
+  Inventory["Inventory Availability"]
+  Pricing["Dynamic Pricing Rules"]
+  RecommendationEngine["Recommendation Engine"]
+  Ranking["Ranking and Filtering"]
+  Output["Recommended Products"]
+  Sections["Liquid Recommendation Sections"]
+  Notifications["Email SMS and Push Recommendations"]
+  EventQueue["Event Queue or Message Broker"]
+
+  Visitor --> Storefront
+  Storefront --> ProductViews
+  Storefront --> Searches
+  Storefront --> CartEvents
+  Orders --> Analytics
+  ProductViews --> EventQueue
+  Searches --> EventQueue
+  CartEvents --> EventQueue
+  EventQueue --> Analytics
+  Analytics --> Profile
+  Catalog --> RecommendationEngine
+  Metafields --> RecommendationEngine
+  Inventory --> RecommendationEngine
+  Pricing --> RecommendationEngine
+  Profile --> RecommendationEngine
+  RecommendationEngine --> Ranking
+  Ranking --> Output
+  Output --> Sections
+  Output --> Notifications
+  Sections --> Visitor

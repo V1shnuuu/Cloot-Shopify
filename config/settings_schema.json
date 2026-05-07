@@ -1,0 +1,196 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Skeleton",
+    "theme_version": "0.1.0",
+    "theme_author": "Shopify",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "t:general.typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:general.fonts"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_primary_font",
+        "default": "work_sans_n4",
+        "label": "t:general.primary"
+      }
+    ]
+  },
+  {
+    "name": "t:general.layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "max_page_width",
+        "label": "t:labels.page_width",
+        "options": [
+          {
+            "value": "90rem",
+            "label": "t:options.page_width.narrow"
+          },
+          {
+            "value": "110rem",
+            "label": "t:options.page_width.wide"
+          }
+        ],
+        "default": "90rem"
+      },
+      {
+        "type": "range",
+        "id": "min_page_margin",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.page_margin",
+        "default": 20
+      }
+    ]
+  },
+  {
+    "name": "t:general.colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "default": "#FFFFFF",
+        "label": "t:labels.background"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color",
+        "default": "#333333",
+        "label": "t:labels.foreground"
+      },
+      {
+        "type": "range",
+        "id": "input_corner_radius",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.input_corner_radius",
+        "default": 4
+      }
+    ]
+  },
+  {
+    "name": "Premium Brand Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Brand"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary Color",
+        "default": "#0ea5e9"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_dark",
+        "label": "Primary Dark",
+        "default": "#0284c7"
+      },
+      {
+        "type": "header",
+        "content": "Semantic Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "Success",
+        "default": "#10b981"
+      },
+      {
+        "type": "color",
+        "id": "color_warning",
+        "label": "Warning",
+        "default": "#f59e0b"
+      },
+      {
+        "type": "color",
+        "id": "color_error",
+        "label": "Error",
+        "default": "#ef4444"
+      }
+    ]
+  },
+  {
+    "name": "Animations & Effects",
+    "settings": [
+      {
+        "type": "select",
+        "id": "animation_speed",
+        "label": "Animation Speed",
+        "options": [
+          {
+            "value": "slow",
+            "label": "Slow"
+          },
+          {
+            "value": "normal",
+            "label": "Normal"
+          },
+          {
+            "value": "fast",
+            "label": "Fast"
+          },
+          {
+            "value": "none",
+            "label": "Disabled"
+          }
+        ],
+        "default": "normal"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_glassmorphism",
+        "label": "Enable Glassmorphism",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_hover_effects",
+        "label": "Enable Hover Effects",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_parallax",
+        "label": "Enable Parallax",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Header & Footer",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "header_sticky",
+        "label": "Sticky Header",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_newsletter",
+        "label": "Show Newsletter Signup",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_social",
+        "label": "Show Social Links",
+        "default": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,220 @@
+{% stylesheet %}
+  .hero-premium {
+    position: relative;
+    min-height: 92vh;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    color: var(--tlm-fg);
+    isolation: isolate;
+    border-radius: 20px;
+    margin: 0 var(--tlm-page-gutter);
+    background: radial-gradient(circle at 20% 20%, rgba(214, 201, 170, 0.12), transparent 40%), #080808;
+  }
+
+  .hero-premium__media,
+  .hero-premium__overlay,
+  .hero-premium__grain {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-premium__media {
+    z-index: 0;
+  }
+
+  .hero-premium__media .image,
+  .hero-premium__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-premium__overlay {
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.82) 100%);
+    opacity: var(--hero-overlay-opacity, 0.55);
+  }
+
+  .hero-premium__grain {
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.12;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+
+  .hero-premium__content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 18px;
+    padding: clamp(72px, 12vh, 136px) 0 clamp(56px, 10vh, 110px);
+    max-width: 780px;
+  }
+
+  .hero-premium--left .hero-premium__content {
+    margin-right: auto;
+  }
+
+  .hero-premium--center .hero-premium__content {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero-premium--right .hero-premium__content {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .hero-premium__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(2.5rem, 7vw, 6.2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .hero-premium__subtitle {
+    color: var(--tlm-muted);
+    line-height: 1.75;
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    max-width: 56ch;
+  }
+
+  .hero-premium--center .hero-premium__subtitle,
+  .hero-premium--right .hero-premium__subtitle {
+    margin-inline: auto 0;
+  }
+
+  .hero-premium__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero-premium--center .hero-premium__actions {
+    justify-content: center;
+  }
+
+  .hero-premium--right .hero-premium__actions {
+    justify-content: flex-end;
+  }
+
+  .hero-premium__meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .hero-premium__meta span {
+    border-radius: 999px;
+    border: 1px solid rgba(242, 241, 237, 0.22);
+    background: rgba(8, 8, 8, 0.44);
+    padding: 8px 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 10px;
+    color: var(--tlm-muted);
+  }
+
+  @media screen and (max-width: 749px) {
+    .hero-premium {
+      min-height: 78vh;
+      margin: 0 12px;
+      border-radius: 14px;
+    }
+
+    .hero-premium__content {
+      padding: 112px 0 76px;
+      gap: 14px;
+    }
+
+    .hero-premium__actions {
+      width: 100%;
+      display: grid;
+    }
+
+    .hero-premium__actions .tlm-btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+<section class="hero-premium hero-premium--{{ section.settings.alignment }} full-width" data-hero style="--hero-overlay-opacity: {{ section.settings.overlay_opacity | times: 0.01 }};">
+  <div class="hero-premium__media" data-parallax data-parallax-speed="0.14">
+    {% if section.settings.image != blank %}
+      {% render 'image', image: section.settings.image, width: 2200, height: 2500, crop: 'center' %}
+    {% else %}
+      <div class="hero-premium__fallback"></div>
+    {% endif %}
+  </div>
+  <div class="hero-premium__overlay"></div>
+  <div class="hero-premium__grain" aria-hidden="true"></div>
+
+  <div class="tlm-container">
+    <div class="hero-premium__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="tlm-eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <h1 class="hero-premium__title" data-reveal>{{ section.settings.title }}</h1>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        <p class="hero-premium__subtitle" data-reveal>{{ section.settings.subtitle }}</p>
+      {% endif %}
+      <div class="hero-premium__meta" data-reveal>
+        <span>{{ section.settings.meta_one }}</span>
+        <span>{{ section.settings.meta_two }}</span>
+        <span>{{ section.settings.meta_three }}</span>
+      </div>
+      <div class="hero-premium__actions" data-reveal>
+        {% if section.settings.cta_text != blank and section.settings.cta_url != blank %}
+          <a class="tlm-btn" href="{{ section.settings.cta_url }}" data-magnetic>{{ section.settings.cta_text }}</a>
+        {% endif %}
+        {% if section.settings.secondary_cta_text != blank and section.settings.secondary_cta_url != blank %}
+          <a class="tlm-btn tlm-btn--ghost" href="{{ section.settings.secondary_cta_url }}" data-magnetic>{{ section.settings.secondary_cta_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero premium",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Edition 05" },
+    { "type": "textarea", "id": "title", "label": "Title", "default": "Luxury Streetwear In Motion" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Precision silhouettes, premium fabrication, and cinematic detail for modern wardrobes." },
+    { "type": "text", "id": "cta_text", "label": "Primary button label", "default": "Shop new drop" },
+    { "type": "url", "id": "cta_url", "label": "Primary button link" },
+    { "type": "text", "id": "secondary_cta_text", "label": "Secondary button label", "default": "Explore lookbook" },
+    { "type": "url", "id": "secondary_cta_url", "label": "Secondary button link" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "default": 58, "min": 20, "max": 90, "step": 1 },
+    { "type": "text", "id": "meta_one", "label": "Meta tag 1", "default": "Limited release" },
+    { "type": "text", "id": "meta_two", "label": "Meta tag 2", "default": "Crafted in Chennai" },
+    { "type": "text", "id": "meta_three", "label": "Meta tag 3", "default": "Express dispatch" }
+  ],
+  "presets": [
+    {
+      "name": "Hero premium"
+    }
+  ]
+}
+{% endschema %}

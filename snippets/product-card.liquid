@@ -1,0 +1,86 @@
+{% doc %}
+  Cinematic product card with optional quick add.
+
+  @param {product} product
+  @param {boolean} [show_quick_add]
+{% enddoc %}
+{%- assign secondary_image = product.images[1] -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign quick_image = product.featured_image | image_url: width: 900 -%}
+<article class="tlm-product-card" data-reveal data-tilt data-commerce-event="product_card_view" data-product-id="{{ product.id }}">
+  <div class="tlm-product-card__media">
+    <a class="tlm-product-card__image-link" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+      {% if product.featured_image %}
+        {% render 'image',
+          class: 'tlm-product-card__image is-primary',
+          image: product.featured_image,
+          width: 900,
+          height: 1100,
+          crop: 'center'
+        %}
+      {% endif %}
+      {% if secondary_image %}
+        {% render 'image',
+          class: 'tlm-product-card__image is-secondary',
+          image: secondary_image,
+          width: 900,
+          height: 1100,
+          crop: 'center'
+        %}
+      {% endif %}
+    </a>
+    <button
+      class="tlm-product-card__wishlist"
+      type="button"
+      data-wishlist-toggle
+      data-product-id="{{ product.id }}"
+      data-variant-id="{{ current_variant.id }}"
+      data-product-title="{{ product.title | escape }}"
+      data-product-url="{{ product.url }}"
+      data-product-image="{{ quick_image }}"
+      aria-label="Toggle wishlist for {{ product.title | escape }}"
+      aria-pressed="false"
+    >
+      {% render 'icon-heart' %}
+    </button>
+    <div class="tlm-product-card__overlay">
+      {% if product.available %}
+        <button
+          class="tlm-product-card__chip tlm-product-card__quick"
+          type="button"
+          data-quick-view-trigger
+          data-product-title="{{ product.title | escape }}"
+          data-product-price="{{ product.price | money | escape }}"
+          data-product-url="{{ product.url }}"
+          data-product-image="{{ quick_image }}"
+        >
+          Quick view
+        </button>
+      {% else %}
+        <span class="tlm-product-card__chip">Sold out</span>
+      {% endif %}
+      <span class="tlm-product-card__chip">View</span>
+    </div>
+  </div>
+  <div class="tlm-product-card__info">
+    <div>
+      <p class="tlm-product-card__title">{{ product.title | escape }}</p>
+      <p class="tlm-product-card__price" data-dynamic-price data-product-id="{{ product.id }}" data-variant-id="{{ current_variant.id }}">{{ product.price | money }}</p>
+      {% if product.options_with_values.size > 0 %}
+        <div class="tlm-product-card__swatches" aria-label="Available options">
+          {% for value in product.options_with_values.first.values limit: 4 %}
+            <span class="tlm-product-card__swatch" title="{{ value | escape }}" style="--swatch: #{% cycle 'd6c9aa', 'f2f1ed', '383838', '6d7568' %};"></span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    {% if show_quick_add %}
+      {% form 'product', product, data-quick-add: product.id %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <button class="tlm-btn tlm-btn--ghost" type="submit" data-magnetic {% unless current_variant.available %}disabled{% endunless %}>
+          Quick add
+        </button>
+      {% endform %}
+    {% endif %}
+  </div>
+</article>

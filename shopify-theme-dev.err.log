@@ -1,0 +1,144 @@
+╭─ success ────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Preview your theme (t)                                                      │
+│    • http://127.0.0.1:9292                                                   │
+│                                                                              │
+│  Next steps                                                                  │
+│    • Share your theme preview (p) [1]                                        │
+│      https://2mwxhm-mk.myshopify.com/?preview_theme_id=139652792416          │
+│    • Customize your theme at the theme editor (e) [2]                        │
+│    • Preview your gift cards (g) [3]                                         │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+[1] https://2mwxhm-mk.myshopify.com/?preview_theme_id=139652792416
+[2] https://2mwxhm-mk.myshopify.com/admin/themes/139652792416/editor?hr=9292
+[3] http://127.0.0.1:9292/gift_cards/[store_id]/preview
+
+• 12:47:47 Request »    GET 200 / 2172ms
+• 12:48:12 Request »    GET 200 / 1086ms
+• 12:48:34 Request »    GET 200 /collections/all 732ms
+• 12:49:58  Synced » update snippets/thelogoman-motion.liquid
+• 12:49:58 Request »    GET 200 / 944ms
+• 12:49:59 Request »    GET 200 /collections/all 1101ms
+• 12:50:03 Request »    GET 200 / 945ms
+• 13:03:01  Synced » update assets/commerce-orchestrator.js
+• 13:03:25  Synced » update snippets/commerce-kpi-card.liquid
+• 13:03:25  Synced » update snippets/commerce-status-timeline.liquid
+• 13:03:25  Synced » update sections/review-system.liquid
+• 13:03:25  Synced » update sections/recommendation-engine.liquid
+• 13:03:58  Synced » update sections/customer-dashboard.liquid
+• 13:03:58  Synced » update sections/return-request.liquid
+• 13:03:58  Synced » update sections/admin-analytics-dashboard.liquid
+• 13:03:58  Synced » update sections/order-tracking.liquid
+• 13:04:15  Synced » update layout/theme.liquid
+• 13:04:15  Synced » update templates/page.returns.json
+• 13:04:15  Synced » update templates/page.customer-dashboard.json
+• 13:04:15  Synced » update templates/product.json
+• 13:04:15  Synced » update snippets/product-card.liquid
+• 13:04:15  Synced » update templates/page.admin-dashboard.json
+• 13:04:15  Synced » update templates/page.order-tracking.json
+• 13:04:15  Synced » update snippets/thelogoman-core.liquid
+• 13:04:25  Synced » update assets/commerce-orchestrator.js
+• 13:05:42 Request »    GET 200 / 964ms
+• 16:01:59  Synced » update assets/design-system.css
+• 16:01:59  Synced » update assets/design-system.css
+• 16:02:25  Synced » update snippets/button.liquid
+• 16:02:25  Synced » update snippets/button.liquid
+• 16:02:27  Synced » update snippets/card.liquid
+• 16:02:27  Synced » update snippets/card.liquid
+• 16:02:55  Synced » update snippets/modal.liquid
+• 16:02:55  Synced » update snippets/modal.liquid
+• 16:02:57  Synced » update snippets/drawer.liquid
+• 16:02:57  Synced » update snippets/drawer.liquid
+• 16:02:59  Synced » update snippets/badge.liquid
+• 16:02:59  Synced » update snippets/badge.liquid
+• 16:03:01  Synced » update snippets/pricing-card.liquid
+• 16:03:01  Synced » update snippets/pricing-card.liquid
+• 16:03:26  Synced » update sections/hero-premium.liquid
+• 16:03:26  Synced » update sections/hero-premium.liquid
+• 16:03:28  Synced » update sections/features-grid.liquid
+• 16:03:28  Synced » update sections/features-grid.liquid
+• 16:03:30  Synced » update sections/products-grid.liquid
+• 16:03:30  Synced » update sections/products-grid.liquid
+• 16:03:58  Synced » update sections/recommendations-carousel.liquid
+• 16:03:59  Synced » update sections/recommendations-carousel.liquid
+• 16:04:01  Synced » update sections/testimonials.liquid
+• 16:04:02  Synced » update sections/testimonials.liquid
+• 16:04:03  Synced » update sections/cta-premium.liquid
+• 16:04:03  Synced » update sections/cta-premium.liquid
+• 16:05:07  Synced » update sections/returns-portal.liquid
+• 16:05:08  Synced » update sections/returns-portal.liquid
+• 16:05:40  Synced » update sections/admin-analytics.liquid
+• 16:05:41  Synced » update sections/admin-analytics.liquid
+• 16:05:42  Synced » update sections/admin-inventory.liquid
+• 16:05:42  Synced » update sections/admin-inventory.liquid
+• 16:06:07  Synced » update sections/faq.liquid
+• 16:06:07  Synced » update sections/faq.liquid
+• 16:06:09  Synced » update sections/footer-premium.liquid
+• 16:06:09  Synced » update sections/footer-premium.liquid
+• 16:12:44  Synced » update layout/theme.liquid
+• 16:12:50  Synced » update layout/theme.liquid
+• 16:12:57  Synced » update sections/footer-group.json
+• 16:13:17  Synced » update templates/product.json
+• 16:13:46  Synced » update templates/collection.json
+• 16:13:53  Synced » update templates/cart.json
+• 16:14:07  Synced » update templates/index.json
+• 16:14:50  Synced » update config/settings_schema.json
+╭─ error ──────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Failed to upload file "sections/hero-premium.liquid" to remote theme.       │
+│                                                                              │
+│  Invalid schema: setting with id="overlay_opacity" default must have 1 or    │
+│  less decimal digits                                                         │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+╭─ error ──────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│  Failed to upload file "sections/hero-premium.liquid" to remote theme.       │
+│                                                                              │
+│  Invalid schema: setting with id="overlay_opacity" default must have 1 or    │
+│  less decimal digits                                                         │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+• 17:51:44  Synced » update sections/features-grid.liquid
+• 17:52:30  Synced » update sections/testimonials.liquid
+• 17:53:12  Synced » update sections/cta-premium.liquid
+• 17:54:08  Synced » update sections/faq.liquid
+• 17:55:01  Synced » update sections/products-grid.liquid
+• 17:55:57  Synced » update sections/recommendations-carousel.liquid
+• 17:56:15  Synced » update sections/header.liquid
+• 17:56:35  Synced » update templates/collection.json
+• 17:56:48  Synced » update templates/product.json
+• 17:57:02  Synced » update templates/cart.json
+• 17:57:21  Synced » update templates/index.json
+• 18:00:32  Synced » update sections/hero-premium.liquid
+• 18:04:14  Synced » update assets/cinematic-homepage.js
+• 18:04:14  Synced » update assets/cinematic-homepage.js
+• 18:04:15  Synced » update assets/cinematic-homepage.js
+• 18:05:42  Synced » update sections/landing-cinematic.liquid
+• 18:05:42  Synced » update sections/landing-cinematic.liquid
+• 18:05:59  Synced » update sections/landing-cinematic.liquid
+• 18:06:18  Synced » update templates/index.json
+• 18:18:16  Synced » update sections/landing-cinematic.liquid
+• 18:18:36  Synced » update assets/cinematic-homepage.js
+• 18:19:08  Synced » update layout/theme.liquid
+• 18:19:08  Synced » update sections/collections.liquid
+• 18:19:08  Synced » update sections/cart.liquid
+• 18:19:08  Synced » update sections/collection.liquid
+• 18:19:08  Synced » update sections/footer.liquid
+• 18:19:08  Synced » update sections/search.liquid
+• 18:19:08  Synced » update snippets/cart-drawer.liquid
+• 18:19:09  Synced » update snippets/predictive-search-overlay.liquid
+• 18:19:09  Synced » update snippets/thelogoman-cursor.liquid
+• 18:19:09  Synced » update snippets/thelogoman-fonts.liquid
+• 18:19:09  Synced » update templates/index.json
+• 18:19:09  Synced » update sections/hero-cinematic.liquid
+• 18:19:09  Synced » update assets/commerce-orchestrator.js
+• 18:19:09  Synced » update sections/editorial-story.liquid
+• 18:19:09  Synced » update sections/landing-cinematic.liquid
+• 18:19:09  Synced » update sections/header.liquid
+• 18:19:09  Synced » update snippets/thelogoman-motion.liquid
+• 18:19:09  Synced » update sections/product.liquid
+• 18:19:09  Synced » update snippets/thelogoman-core.liquid

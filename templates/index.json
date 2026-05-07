@@ -1,0 +1,78 @@
+
+{
+  "sections": {
+    "landing": {
+      "type": "landing-cinematic",
+      "settings": {
+        "brand_mark": "Cloot",
+        "hero_eyebrow": "New season edit",
+        "hero_title_line_one": "Cinematic",
+        "hero_title_line_two": "Luxury",
+        "hero_subtitle": "Immersive fashion storytelling shaped by precision silhouettes, layered motion, and high-conversion product presentation.",
+        "primary_cta_label": "Shop now",
+        "primary_cta_link": "/collections/all",
+        "secondary_cta_label": "View collection",
+        "secondary_cta_link": "/collections/all",
+        "marquee_text": "Premium silhouettes • New drops weekly • Crafted in Chennai •",
+        "featured_products_limit": 6,
+        "story_cta_label": "Explore brand",
+        "story_cta_link": "/pages/about"
+      },
+      "blocks": {
+        "collection_one": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Core essentials"
+          }
+        },
+        "collection_two": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Technical layers"
+          }
+        },
+        "collection_three": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Evening edit"
+          }
+        },
+        "testimonial_one": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The motion quality feels premium and the product presentation drives stronger engagement.",
+            "name": "A. Verma"
+          }
+        },
+        "testimonial_two": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Feels like an editorial campaign site, but still shoppable and fast.",
+            "name": "R. Menon"
+          }
+        },
+        "testimonial_three": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Scroll storytelling and hover behavior make every section feel alive.",
+            "name": "V. Iyer"
+          }
+        }
+      },
+      "block_order": [
+        "collection_one",
+        "collection_two",
+        "collection_three",
+        "testimonial_one",
+        "testimonial_two",
+        "testimonial_three"
+      ]
+    }
+  },
+  "order": [
+    "landing"
+  ]
+}

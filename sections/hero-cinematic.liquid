@@ -1,0 +1,342 @@
+{% stylesheet %}
+  .hero-cinematic {
+    position: relative;
+    min-height: 92vh;
+    display: grid;
+    align-items: center;
+    color: var(--tlm-fg);
+    overflow: hidden;
+    background: #050505;
+  }
+
+  .hero-cinematic__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-cinematic__media video,
+  .hero-cinematic__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+  }
+
+  .hero-cinematic__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+  }
+
+  .hero-cinematic__overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--hero-x, 50%) var(--hero-y, 30%), rgba(214, 201, 170, 0.12), transparent 55%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.75));
+    opacity: var(--overlay-opacity, 0.65);
+    z-index: 1;
+  }
+
+  .hero-cinematic__grain,
+  .hero-cinematic__wash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-cinematic__grain {
+    opacity: 0.12;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(180deg, transparent, #000 20%, #000 70%, transparent);
+  }
+
+  .hero-cinematic__wash {
+    background: linear-gradient(105deg, transparent 0 42%, rgba(214, 201, 170, 0.08) 50%, transparent 58% 100%);
+    transform: translateX(-40%);
+    animation: hero-wash 7s var(--tlm-ease-cinematic) infinite;
+  }
+
+  .hero-cinematic__content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 24px;
+    padding: 140px 0 120px;
+  }
+
+  .hero-cinematic__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .hero-cinematic__meta span {
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 999px;
+    padding: 8px 11px;
+    background: rgba(8, 8, 8, 0.32);
+    backdrop-filter: blur(12px);
+    color: var(--tlm-muted);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .hero-cinematic__title {
+    font-size: clamp(2.6rem, 6vw, 6rem);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .hero-cinematic__subtext {
+    max-width: 540px;
+    color: var(--tlm-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .hero-cinematic__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .hero-cinematic__scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 64px;
+    background: rgba(242, 241, 237, 0.2);
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .hero-cinematic__scroll span {
+    display: block;
+    width: 100%;
+    height: 40%;
+    background: var(--tlm-fg);
+    animation: hero-scroll 2s var(--tlm-ease) infinite;
+  }
+
+  .hero-cinematic__side-note {
+    position: absolute;
+    right: var(--tlm-page-gutter);
+    bottom: 44px;
+    z-index: 2;
+    max-width: 220px;
+    color: rgba(242, 241, 237, 0.54);
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  @keyframes hero-scroll {
+    0% {
+      transform: translateY(-100%);
+    }
+    60% {
+      transform: translateY(120%);
+    }
+    100% {
+      transform: translateY(200%);
+    }
+  }
+
+  @keyframes hero-wash {
+    0%,
+    42% {
+      transform: translateX(-54%);
+      opacity: 0;
+    }
+    58% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(54%);
+      opacity: 0;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .hero-cinematic__content {
+      padding: 120px 0 100px;
+    }
+
+    .hero-cinematic__actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero-cinematic__side-note {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+<section class="hero-cinematic hero-cinematic-{{ section.id }} full-width" data-hero style="--overlay-opacity: {{ section.settings.overlay_opacity }};">
+  <div class="hero-cinematic__media" data-parallax data-parallax-speed="0.2">
+    {% if section.settings.video_url != blank %}
+      <video autoplay muted loop playsinline>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.image != blank %}
+      {% render 'image',
+        image: section.settings.image,
+        width: 2000,
+        height: 2200,
+        crop: 'center'
+      %}
+    {% else %}
+      <div class="hero-cinematic__placeholder"></div>
+    {% endif %}
+  </div>
+
+  <div class="hero-cinematic__overlay"></div>
+  <div class="hero-cinematic__grain"></div>
+  <div class="hero-cinematic__wash"></div>
+
+  <div class="hero-cinematic__content tlm-container">
+    {% if section.settings.eyebrow != blank %}
+      <p class="tlm-eyebrow" data-reveal>{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    {% if section.settings.headline != blank %}
+      <h1 class="hero-cinematic__title tlm-title" data-reveal>{{ section.settings.headline }}</h1>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p class="hero-cinematic__subtext" data-reveal>{{ section.settings.subheading }}</p>
+    {% endif %}
+    <div class="hero-cinematic__meta" data-reveal>
+      <span>{{ section.settings.meta_one }}</span>
+      <span>{{ section.settings.meta_two }}</span>
+      <span>{{ section.settings.meta_three }}</span>
+    </div>
+    <div class="hero-cinematic__actions" data-reveal>
+      {% if section.settings.primary_label != blank %}
+        {% if section.settings.primary_link != blank %}
+          <a class="tlm-btn" href="{{ section.settings.primary_link }}" data-magnetic>
+            {{ section.settings.primary_label }}
+          </a>
+        {% endif %}
+      {% endif %}
+      {% if section.settings.secondary_label != blank %}
+        {% if section.settings.secondary_link != blank %}
+          <a class="tlm-btn tlm-btn--ghost" href="{{ section.settings.secondary_link }}" data-magnetic>
+            {{ section.settings.secondary_label }}
+          </a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="hero-cinematic__scroll" aria-hidden="true">
+    <span></span>
+  </div>
+  {% if section.settings.side_note != blank %}
+    <div class="hero-cinematic__side-note" data-reveal>{{ section.settings.side_note }}</div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Cloot Cinematic Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Background video URL (MP4)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.7
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Cloot"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Cinematic streetwear for the modern era"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Oversized silhouettes, layered textures, and editorial tones crafted for luxury movement."
+    },
+    {
+      "type": "text",
+      "id": "meta_one",
+      "label": "Meta label one",
+      "default": "3D Logos"
+    },
+    {
+      "type": "text",
+      "id": "meta_two",
+      "label": "Meta label two",
+      "default": "Clothing"
+    },
+    {
+      "type": "text",
+      "id": "meta_three",
+      "label": "Meta label three",
+      "default": "Custom builds"
+    },
+    {
+      "type": "textarea",
+      "id": "side_note",
+      "label": "Side note",
+      "default": "Designed for collectors, fans, and makers of identity."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "Shop new drop"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "View lookbook"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cloot Cinematic Hero"
+    }
+  ]
+}
+{% endschema %}

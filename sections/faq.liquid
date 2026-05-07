@@ -1,0 +1,201 @@
+{% stylesheet %}
+  .faq-premium {
+    padding: clamp(56px, 8vw, 108px) 0;
+  }
+
+  .faq-premium__container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-premium__header {
+    margin-bottom: 24px;
+  }
+
+  .faq-premium__title {
+    font-family: var(--tlm-font-display);
+    font-size: clamp(1.8rem, 4.6vw, 3.8rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .faq-premium__description {
+    margin-top: 12px;
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+
+  .faq-premium__search {
+    margin-bottom: 14px;
+  }
+
+  .faq-premium__search input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(242, 241, 237, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--tlm-fg);
+  }
+
+  .faq-premium__search input:focus {
+    outline: none;
+    border-color: rgba(214, 201, 170, 0.5);
+  }
+
+  .faq-premium__items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .faq-premium__item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 220ms var(--tlm-ease);
+  }
+
+  .faq-premium__trigger {
+    width: 100%;
+    border: 0;
+    padding: 16px;
+    background: transparent;
+    color: var(--tlm-fg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+  }
+
+  .faq-premium__trigger span:last-child {
+    font-size: 0.9rem;
+    color: var(--tlm-muted);
+    transition: transform 220ms var(--tlm-ease);
+  }
+
+  .faq-premium__item.is-open {
+    border-color: rgba(214, 201, 170, 0.36);
+  }
+
+  .faq-premium__item.is-open .faq-premium__trigger span:last-child {
+    transform: rotate(45deg);
+  }
+
+  .faq-premium__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 260ms var(--tlm-ease), padding 260ms var(--tlm-ease);
+    padding: 0 16px;
+  }
+
+  .faq-premium__item.is-open .faq-premium__answer {
+    max-height: 500px;
+    padding: 0 16px 16px;
+  }
+
+  .faq-premium__answer p {
+    color: var(--tlm-muted);
+    line-height: 1.7;
+  }
+{% endstylesheet %}
+
+<section class="faq-premium" data-faq-section-id="{{ section.id }}">
+  <div class="tlm-container">
+    <div class="faq-premium__container">
+      <header class="faq-premium__header" data-reveal>
+        {% if section.settings.title != blank %}
+          <h2 class="faq-premium__title">{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <p class="faq-premium__description">{{ section.settings.description }}</p>
+        {% endif %}
+      </header>
+
+      <div class="faq-premium__search" data-reveal>
+        <input type="search" placeholder="Search questions" data-faq-search>
+      </div>
+
+      <div class="faq-premium__items">
+        {% for block in section.blocks %}
+          <article class="faq-premium__item{% if forloop.first %} is-open{% endif %}" data-faq-item data-reveal {{ block.shopify_attributes }}>
+            <button class="faq-premium__trigger" type="button" data-faq-trigger aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+              <span>{{ block.settings.question }}</span>
+              <span>+</span>
+            </button>
+            <div class="faq-premium__answer" data-faq-answer>
+              <p>{{ block.settings.answer }}</p>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+  (() => {
+    const root = document.querySelector('[data-faq-section-id="{{ section.id }}"]');
+    if (!root) return;
+
+    const items = [...root.querySelectorAll('[data-faq-item]')];
+    const search = root.querySelector('[data-faq-search]');
+
+    items.forEach((item) => {
+      const trigger = item.querySelector('[data-faq-trigger]');
+      if (!trigger) return;
+      trigger.addEventListener('click', () => {
+        const willOpen = !item.classList.contains('is-open');
+        item.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+    });
+
+    if (search) {
+      search.addEventListener('input', (event) => {
+        const query = event.target.value.trim().toLowerCase();
+        items.forEach((item) => {
+          const text = item.textContent.toLowerCase();
+          item.hidden = query.length > 0 && !text.includes(query);
+        });
+      });
+    }
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Frequently asked" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Answers about shipping, returns, quality, and fit." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How long does shipping take?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Orders dispatch within 24 hours and typically deliver in 2 to 5 business days." }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

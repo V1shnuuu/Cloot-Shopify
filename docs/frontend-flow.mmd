@@ -1,0 +1,46 @@
+flowchart TD
+  visitor[Visitor enters storefront]
+  request[Browser requests storefront route]
+  themeLayout[layout/theme.liquid renders shell]
+  templateRouter{Template type}
+  home[templates/index.json]
+  product[templates/product.json]
+  collection[templates/collection.json]
+  cart[templates/cart.json]
+  page[Other JSON or Liquid templates]
+  sections[Render ordered sections]
+  snippets[Render shared snippets]
+  assets[Load CSS JavaScript and media assets]
+  productCards[Product cards and collection grids]
+  productForm[Product form]
+  ajaxCart[Ajax Cart API]
+  cartDrawer[Cart drawer updates]
+  checkout[Redirect to Shopify checkout]
+  search[Predictive search overlay]
+  analytics[Customer events and analytics pixels]
+
+  visitor --> request
+  request --> themeLayout
+  themeLayout --> templateRouter
+  templateRouter --> home
+  templateRouter --> product
+  templateRouter --> collection
+  templateRouter --> cart
+  templateRouter --> page
+  home --> sections
+  product --> sections
+  collection --> sections
+  cart --> sections
+  page --> sections
+  sections --> snippets
+  snippets --> assets
+  sections --> productCards
+  productCards --> product
+  product --> productForm
+  productForm --> ajaxCart
+  ajaxCart --> cartDrawer
+  cartDrawer --> checkout
+  themeLayout --> search
+  search --> productCards
+  themeLayout --> analytics
+  checkout --> analytics

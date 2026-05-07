@@ -1,0 +1,209 @@
+{% stylesheet %}
+  .tlm-cart-page {
+    padding: 80px 0 120px;
+  }
+
+  .tlm-cart-page__header {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .tlm-cart-page__subtext {
+    color: var(--tlm-muted);
+    max-width: 620px;
+    line-height: 1.7;
+  }
+
+  .tlm-cart-page__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.6fr;
+    gap: 40px;
+  }
+
+  .tlm-cart-page__items {
+    display: grid;
+    gap: 24px;
+  }
+
+  .tlm-cart-page__item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(242, 241, 237, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    transition: transform 260ms var(--tlm-ease), border-color 260ms var(--tlm-ease);
+  }
+
+  .tlm-cart-page__item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(214, 201, 170, 0.28);
+  }
+
+  .tlm-cart-page__media {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tlm-cart-page__title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .tlm-cart-page__variant,
+  .tlm-cart-page__price {
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-cart-page__qty {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .tlm-cart-page__qty input {
+    width: 60px;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    background: transparent;
+    color: var(--tlm-fg);
+  }
+
+  .tlm-cart-page__summary {
+    border-radius: 10px;
+    border: 1px solid rgba(242, 241, 237, 0.14);
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    display: grid;
+    gap: 16px;
+    align-self: start;
+    position: sticky;
+    top: 120px;
+  }
+
+  .tlm-cart-page__progress {
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(242, 241, 237, 0.1);
+  }
+
+  .tlm-cart-page__progress span {
+    display: block;
+    width: var(--cart-progress, 0%);
+    height: 100%;
+    background: linear-gradient(90deg, rgba(214, 201, 170, 0.3), var(--tlm-accent));
+  }
+
+  .tlm-cart-page__perks {
+    display: grid;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(242, 241, 237, 0.08);
+  }
+
+  .tlm-cart-page__perk {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--tlm-muted);
+    font-size: 12px;
+  }
+
+  .tlm-cart-page__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .tlm-cart-page__actions {
+    display: grid;
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .tlm-cart-page__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tlm-cart-page__summary {
+      position: static;
+    }
+  }
+{% endstylesheet %}
+
+<section class="tlm-cart-page">
+  <div class="tlm-cart-page__header tlm-container">
+    <p class="tlm-eyebrow" data-reveal>Cart</p>
+    <h1 class="tlm-title" data-reveal>Your selections</h1>
+    <p class="tlm-cart-page__subtext" data-reveal>Review your pieces, tune quantities, and move into secure checkout when the edit feels right.</p>
+  </div>
+
+  {% if cart.item_count == 0 %}
+    <div class="tlm-container">
+      <p class="tlm-cart__empty" data-reveal>Your cart is empty.</p>
+      <a class="tlm-btn" href="{{ routes.all_products_collection_url }}" data-magnetic>Continue shopping</a>
+    </div>
+  {% else %}
+    <form action="{{ routes.cart_url }}" method="post" class="tlm-container">
+      <div class="tlm-cart-page__grid">
+        <div class="tlm-cart-page__items">
+          {% for item in cart.items %}
+            <div class="tlm-cart-page__item" data-reveal>
+              <div class="tlm-cart-page__media">
+                {% render 'image', image: item.image, url: item.url, width: 200, height: 240, crop: 'center' %}
+              </div>
+              <div class="tlm-cart-page__details">
+                <p class="tlm-cart-page__title">{{ item.product.title }}</p>
+                <p class="tlm-cart-page__variant">{{ item.variant.title }}</p>
+                <p class="tlm-cart-page__price">{{ item.final_line_price | money }}</p>
+                <div class="tlm-cart-page__qty">
+                  <label for="cart-update-{{ item.key }}">Qty</label>
+                  <input id="cart-update-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                  <a href="{{ item.url_to_remove }}" class="tlm-cart__remove">Remove</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <aside class="tlm-cart-page__summary">
+          <p class="tlm-eyebrow">Order summary</p>
+          <div class="tlm-cart-page__progress" aria-hidden="true">
+            <span style="--cart-progress: {% if cart.total_price >= 100000 %}100{% else %}{{ cart.total_price | times: 100 | divided_by: 100000 }}{% endif %}%;"></span>
+          </div>
+          <div class="tlm-cart-page__row">
+            <span>Subtotal</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          <div class="tlm-cart-page__row">
+            <span>Shipping</span>
+            <span>Calculated at checkout</span>
+          </div>
+          <div class="tlm-cart-page__actions">
+            <button class="tlm-btn" type="submit" name="checkout" data-magnetic>Checkout</button>
+            <button class="tlm-btn tlm-btn--ghost" type="submit">Update cart</button>
+          </div>
+          <div class="tlm-cart-page__perks">
+            <div class="tlm-cart-page__perk"><span>Shipping</span><span>Free above ₹1000</span></div>
+            <div class="tlm-cart-page__perk"><span>Returns</span><span>14 days</span></div>
+            <div class="tlm-cart-page__perk"><span>Payment</span><span>Secure</span></div>
+          </div>
+        </aside>
+      </div>
+    </form>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Cloot Cart",
+  "settings": []
+}
+{% endschema %}
