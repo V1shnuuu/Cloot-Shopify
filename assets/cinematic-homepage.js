@@ -52,6 +52,26 @@
     return lenis;
   };
 
+  // Global registry for created GSAP ScrollTriggers/timelines for cleanup
+  const __tlmRegistry = [];
+
+  const register = (item) => {
+    if (item) __tlmRegistry.push(item);
+    return item;
+  };
+
+  const cleanupRegistry = () => {
+    __tlmRegistry.forEach((it) => {
+      try {
+        if (it.kill) it.kill();
+        if (it.clear) it.clear();
+      } catch (e) {
+        // ignore
+      }
+    });
+    __tlmRegistry.length = 0;
+  };
+
   const setupPreloader = (root, reduceMotion) => {
     const loader = root.querySelector('[data-cine-loader]');
     if (!loader) {
@@ -163,7 +183,7 @@
           scale: 1.22,
           yPercent: 8,
           ease: 'none',
-          scrollTrigger: {
+          ease: 'none',
             trigger: hero,
             start: 'top top',
             end: 'bottom top',
@@ -270,20 +290,53 @@
       return;
     }
 
+    // Precise distance and responsive pinning
     const getDistance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
 
-    window.gsap.to(track, {
-      x: () => -getDistance(),
+    const distance = () => getDistance();
+
+    // Create scrubbed timeline for horizontal track movement
+    const tl = window.gsap.timeline({ defaults: { ease: 'none' } });
+    tl.to(track, { x: () => -distance(), duration: 1 });
+
+    const st = register(window.gsap.to(track, {
+      x: () => -distance(),
       ease: 'none',
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: () => `+=${Math.max(viewport.clientWidth, getDistance() + viewport.clientWidth * 0.4)}`,
+        end: () => `+=${Math.max(viewport.clientWidth, distance() + viewport.clientWidth * 0.5)}`,
         pin: true,
-        scrub: 1,
+        scrub: 0.9,
         invalidateOnRefresh: true,
         anticipatePin: 1
       }
+    }));
+
+    // Masked reveal for each panel image for cinematic transitions
+    const panels = track.querySelectorAll('.cine-horizontal__panel');
+    panels.forEach((panel, i) => {
+      const img = panel.querySelector('img');
+      if (!img) return;
+      // set initial clip-path for CSS fallback
+      img.style.clipPath = 'inset(0 100% 0 0)';
+      const reveal = window.gsap.to(img, {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        ease: 'power2.out',
+        duration: 0.8,
+        paused: true
+      });
+
+      // tie reveal to ScrollTrigger progress over the panel's range
+      const panelST = register(window.gsap.timeline({
+        scrollTrigger: {
+          trigger: panel,
+          containerAnimation: st.scrollTrigger || undefined,
+          start: 'left center',
+          end: 'right center',
+          scrub: 0.6
+        }
+      }).add(reveal.play(), 0));
     });
   };
 
@@ -291,7 +344,6 @@
     if (reduceMotion) {
       return;
     }
-
     root.querySelectorAll('[data-float-card]').forEach((card) => {
       const xTo = window.gsap.quickTo(card, 'x', { duration: 0.35, ease: 'power2.out' });
       const yTo = window.gsap.quickTo(card, 'y', { duration: 0.35, ease: 'power2.out' });
@@ -303,6 +355,44 @@
       card.addEventListener('pointerleave', () => {
         xTo(0);
         yTo(0);
+      });
+    });
+  };
+
+  // Enhanced product hover with tilt/displacement (works with .tlm-product-card)
+  const setupProductHover = (root, reduceMotion) => {
+    if (reduceMotion) return;
+    root.querySelectorAll('.tlm-product-card').forEach((card) => {
+      const media = card.querySelector('.tlm-product-card__media');
+      const imgPrimary = card.querySelector('.tlm-product-card__image.is-primary');
+      const imgSecondary = card.querySelector('.tlm-product-card__image.is-secondary');
+      if (!media || !imgPrimary) return;
+
+      let rafId = null;
+      const state = { rx: 0, ry: 0, tx: 0, ty: 0 };
+
+      const applyTransform = () => {
+        const t = `translate3d(${state.tx}px, ${state.ty}px, 0) rotateX(${state.rx}deg) rotateY(${state.ry}deg) scale(${1.02})`;
+        imgPrimary.style.transform = t;
+        if (imgSecondary) imgSecondary.style.transform = t;
+        rafId = null;
+      };
+
+      media.addEventListener('pointermove', (e) => {
+        const rect = media.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        state.ry = (px - 0.5) * 6; // rotateY
+        state.rx = (0.5 - py) * 6; // rotateX
+        state.tx = (px - 0.5) * 8;
+        state.ty = (py - 0.5) * 8;
+        if (!rafId) rafId = requestAnimationFrame(applyTransform);
+      });
+
+      media.addEventListener('pointerleave', () => {
+        state.rx = state.ry = state.tx = state.ty = 0;
+        if (rafId) cancelAnimationFrame(rafId);
+        window.gsap.to([imgPrimary, imgSecondary].filter(Boolean), { transform: 'translate3d(0,0,0) rotateX(0deg) rotateY(0deg) scale(1)', duration: 0.6, ease: 'power3.out' });
       });
     });
   };
@@ -342,6 +432,7 @@
     setupSceneReveals(root, reduceMotion);
     setupHorizontalStory(root, reduceMotion);
     setupCardInteractions(root, reduceMotion);
+    setupProductHover(root, reduceMotion);
     setupFooterReveal(reduceMotion);
   };
 

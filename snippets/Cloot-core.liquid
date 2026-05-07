@@ -491,6 +491,33 @@ body.tlm-page-leaving .tlm-page-transition {
   transform: translateY(0);
 }
 
+/* CSS fallback for image displacement/distortion */
+.tlm-product-card__image {
+  will-change: transform, filter, clip-path;
+}
+
+.tlm-product-card__media::after {
+  /* subtle sheen for hover to emulate distortion */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 100%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 420ms var(--tlm-ease);
+}
+
+.tlm-product-card__media:hover::after {
+  opacity: 1;
+}
+
+/* Reduced motion fallback */
+@media (prefers-reduced-motion: reduce), (max-width: 749px) {
+  .tlm-product-card__media::after { display: none; }
+  .tlm-product-card__image { transition: none !important; transform: none !important; }
+}
+
 .tlm-product-card__chip {
   border: 1px solid rgba(242, 241, 237, 0.18);
   border-radius: 999px;
